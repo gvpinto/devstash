@@ -23,15 +23,15 @@
 
 Developers keep their essentials scattered across too many tools:
 
-| Resource | Current Home |
-|---|---|
-| Code snippets | VS Code, Notion |
-| AI prompts | Chat history |
-| Context files | Buried in project folders |
-| Useful links | Browser bookmarks |
-| Docs/notes | Random folders |
-| Commands | `.txt` files or bash history |
-| Templates/boilerplate | GitHub Gists |
+| Resource              | Current Home                 |
+| --------------------- | ---------------------------- |
+| Code snippets         | VS Code, Notion              |
+| AI prompts            | Chat history                 |
+| Context files         | Buried in project folders    |
+| Useful links          | Browser bookmarks            |
+| Docs/notes            | Random folders               |
+| Commands              | `.txt` files or bash history |
+| Templates/boilerplate | GitHub Gists                 |
 
 This causes context switching, lost knowledge, and inconsistent workflows. **DevStash** is one fast, searchable, AI-enhanced hub for all of it.
 
@@ -39,30 +39,30 @@ This causes context switching, lost knowledge, and inconsistent workflows. **Dev
 
 ## Target Users
 
-| User Type | Primary Need |
-|---|---|
-| **Everyday Developer** | Fast access to snippets, prompts, commands, links |
-| **AI-first Developer** | Organize prompts, contexts, workflows, system messages |
-| **Content Creator / Educator** | Store code blocks, explanations, course notes |
-| **Full-stack Builder** | Collect patterns, boilerplates, API examples |
+| User Type                      | Primary Need                                           |
+| ------------------------------ | ------------------------------------------------------ |
+| **Everyday Developer**         | Fast access to snippets, prompts, commands, links      |
+| **AI-first Developer**         | Organize prompts, contexts, workflows, system messages |
+| **Content Creator / Educator** | Store code blocks, explanations, course notes          |
+| **Full-stack Builder**         | Collect patterns, boilerplates, API examples           |
 
 ---
 
 ## Tech Stack
 
-| Layer | Choice |
-|---|---|
-| **Framework** | [Next.js 16](https://nextjs.org/) / React 19 |
-| **Language** | TypeScript |
-| **Database** | [Neon](https://neon.tech/) (PostgreSQL) |
-| **ORM** | [Prisma 7](https://www.prisma.io/docs) |
-| **Auth** | [NextAuth v5](https://authjs.dev/) — Email/password + GitHub OAuth |
-| **File Storage** | [Cloudflare R2](https://developers.cloudflare.com/r2/) |
-| **AI** | [OpenAI](https://platform.openai.com/docs) — `gpt-4o-mini` model |
-| **CSS** | [Tailwind CSS v4](https://tailwindcss.com/) |
-| **Components** | [shadcn/ui](https://ui.shadcn.com/) |
-| **Caching** | Redis (optional, TBD) |
-| **Rendering** | SSR pages with dynamic components + API routes |
+| Layer            | Choice                                                             |
+| ---------------- | ------------------------------------------------------------------ |
+| **Framework**    | [Next.js 16](https://nextjs.org/) / React 19                       |
+| **Language**     | TypeScript                                                         |
+| **Database**     | [Neon](https://neon.tech/) (PostgreSQL)                            |
+| **ORM**          | [Prisma 7](https://www.prisma.io/docs)                             |
+| **Auth**         | [NextAuth v5](https://authjs.dev/) — Email/password + GitHub OAuth |
+| **File Storage** | [Cloudflare R2](https://developers.cloudflare.com/r2/)             |
+| **AI**           | [OpenAI](https://platform.openai.com/docs) — `gpt-4o-mini` model   |
+| **CSS**          | [Tailwind CSS v4](https://tailwindcss.com/)                        |
+| **Components**   | [shadcn/ui](https://ui.shadcn.com/)                                |
+| **Caching**      | Redis (optional, TBD)                                              |
+| **Rendering**    | SSR pages with dynamic components + API routes                     |
 
 > ⚠️ **DB Rule:** Never use `db push`. Always create and run migrations explicitly in dev, then apply in prod.
 
@@ -218,6 +218,7 @@ User
 ### Search
 
 Full-text search across:
+
 - Item titles
 - Item content
 - Tags
@@ -239,15 +240,15 @@ Full-text search across:
 
 System types are built-in and cannot be modified by users. Custom types will be added in a future release (Pro only).
 
-| Type | Icon | Color | Route | Content |
-|---|---|---|---|---|
-| Snippet | `Code` | `#3b82f6` (blue) | `/items/snippets` | text |
-| Prompt | `Sparkles` | `#8b5cf6` (purple) | `/items/prompts` | text |
-| Command | `Terminal` | `#f97316` (orange) | `/items/commands` | text |
-| Note | `StickyNote` | `#fde047` (yellow) | `/items/notes` | text |
-| Link | `Link` | `#10b981` (emerald) | `/items/links` | url |
-| File *(Pro)* | `File` | `#6b7280` (gray) | `/items/files` | file |
-| Image *(Pro)* | `Image` | `#ec4899` (pink) | `/items/images` | file |
+| Type          | Icon         | Color               | Route             | Content |
+| ------------- | ------------ | ------------------- | ----------------- | ------- |
+| Snippet       | `Code`       | `#3b82f6` (blue)    | `/items/snippets` | text    |
+| Prompt        | `Sparkles`   | `#8b5cf6` (purple)  | `/items/prompts`  | text    |
+| Command       | `Terminal`   | `#f97316` (orange)  | `/items/commands` | text    |
+| Note          | `StickyNote` | `#fde047` (yellow)  | `/items/notes`    | text    |
+| Link          | `Link`       | `#10b981` (emerald) | `/items/links`    | url     |
+| File _(Pro)_  | `File`       | `#6b7280` (gray)    | `/items/files`    | file    |
+| Image _(Pro)_ | `Image`      | `#ec4899` (pink)    | `/items/images`   | file    |
 
 > Icons are from [Lucide React](https://lucide.dev/icons/).
 
@@ -262,6 +263,13 @@ System types are built-in and cannot be modified by users. Custom types will be 
 - Clean typography, generous whitespace
 - Subtle borders and shadows
 - Reference apps: [Notion](https://notion.so), [Linear](https://linear.app), [Raycast](https://raycast.com)
+
+### Screenshots
+
+Refer to the screenshots below as a base for the dashboard UI. It does not have to be exact and use it as a reference
+
+- @context/screenshots/dashboard-ui-drawer.md
+- @context/screenshots/dashboard-ui-main.md
 
 ### Layout
 
@@ -308,28 +316,28 @@ System types are built-in and cannot be modified by users. Custom types will be 
 
 ### Free Tier
 
-| Limit | Value |
-|---|---|
-| Items | 50 total |
-| Collections | 3 |
-| Item types | System types only (no file/image) |
-| Search | Basic |
-| AI features | ❌ |
-| File/image uploads | ❌ |
+| Limit              | Value                             |
+| ------------------ | --------------------------------- |
+| Items              | 50 total                          |
+| Collections        | 3                                 |
+| Item types         | System types only (no file/image) |
+| Search             | Basic                             |
+| AI features        | ❌                                |
+| File/image uploads | ❌                                |
 
 ### Pro Tier — $8/mo or $72/yr
 
-| Feature | Included |
-|---|---|
-| Items | Unlimited |
-| Collections | Unlimited |
-| File & image uploads | ✅ |
-| Custom item types | ✅ *(later release)* |
-| AI auto-tagging | ✅ |
-| AI code explanation | ✅ |
-| AI prompt optimizer | ✅ |
-| Data export (JSON/ZIP) | ✅ |
-| Priority support | ✅ |
+| Feature                | Included             |
+| ---------------------- | -------------------- |
+| Items                  | Unlimited            |
+| Collections            | Unlimited            |
+| File & image uploads   | ✅                   |
+| Custom item types      | ✅ _(later release)_ |
+| AI auto-tagging        | ✅                   |
+| AI code explanation    | ✅                   |
+| AI prompt optimizer    | ✅                   |
+| Data export (JSON/ZIP) | ✅                   |
+| Priority support       | ✅                   |
 
 > **Dev note:** During development, all users have Pro access.
 
@@ -341,12 +349,12 @@ Payments via [Stripe](https://stripe.com/docs). User model stores `stripeCustome
 
 All AI features are **Pro only** and powered by OpenAI `gpt-4o-mini`.
 
-| Feature | Description |
-|---|---|
-| **Auto-tag suggestions** | Suggests relevant tags when creating or editing an item |
-| **AI Summary** | Generates a short summary of an item's content |
-| **Explain This Code** | Plain-English explanation of a code snippet |
-| **Prompt Optimizer** | Rewrites and improves AI prompts for clarity and effectiveness |
+| Feature                  | Description                                                    |
+| ------------------------ | -------------------------------------------------------------- |
+| **Auto-tag suggestions** | Suggests relevant tags when creating or editing an item        |
+| **AI Summary**           | Generates a short summary of an item's content                 |
+| **Explain This Code**    | Plain-English explanation of a code snippet                    |
+| **Prompt Optimizer**     | Rewrites and improves AI prompts for clarity and effectiveness |
 
 AI calls are handled via Next.js API routes (not exposed client-side).
 
@@ -354,15 +362,15 @@ AI calls are handled via Next.js API routes (not exposed client-side).
 
 ## Key Links
 
-| Resource | URL |
-|---|---|
-| Next.js | https://nextjs.org/docs |
-| Prisma | https://www.prisma.io/docs |
-| NextAuth v5 | https://authjs.dev |
-| Neon (Postgres) | https://neon.tech/docs |
-| Cloudflare R2 | https://developers.cloudflare.com/r2 |
-| Tailwind CSS v4 | https://tailwindcss.com/docs |
-| shadcn/ui | https://ui.shadcn.com |
-| Lucide Icons | https://lucide.dev/icons |
-| OpenAI API | https://platform.openai.com/docs |
-| Stripe | https://stripe.com/docs |
+| Resource        | URL                                  |
+| --------------- | ------------------------------------ |
+| Next.js         | https://nextjs.org/docs              |
+| Prisma          | https://www.prisma.io/docs           |
+| NextAuth v5     | https://authjs.dev                   |
+| Neon (Postgres) | https://neon.tech/docs               |
+| Cloudflare R2   | https://developers.cloudflare.com/r2 |
+| Tailwind CSS v4 | https://tailwindcss.com/docs         |
+| shadcn/ui       | https://ui.shadcn.com                |
+| Lucide Icons    | https://lucide.dev/icons             |
+| OpenAI API      | https://platform.openai.com/docs     |
+| Stripe          | https://stripe.com/docs              |
