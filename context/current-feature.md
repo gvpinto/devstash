@@ -1,27 +1,22 @@
 # Current Feature
 
-Dashboard UI Phase 3 — Main content area with stats, recent collections, pinned items, and recent items.
+None
 
 ## Status
 
-In Progress
+—
 
 ## Goals
 
-- 4 stats cards at the top (total items, collections, favorite items, favorite collections)
-- Recent collections section
-- Pinned items section
-- 10 most recent items section
+—
 
 ## Notes
 
-- Use mock data from `src/lib/mock-data.ts` directly until database is implemented
-- Reference screenshot: `context/screenshots/dashboard-ui-main.png`
-- Spec: `context/features/dashboard-phase-3-spec.md`
+—
 
 ## History
 
-<!-- Keep this updated. Earliest to the lastest -->
+<!-- Keep this updated. Earliest to the latest -->
 
 ### 2026-05-11 — Initial Next.js Setup
 
@@ -45,3 +40,11 @@ In Progress
 - Created `src/components/dashboard/sidebar.tsx` — types list with colored icons + counts + `/items/TYPE` links, favorites + recent collections, user avatar with settings icon
 - Created `src/components/dashboard/dashboard-shell.tsx` — client shell with `PanelLeft` toggle, `⌘K` search hint, smooth width-transition collapse on desktop, overlay drawer on mobile
 - Refactored `src/app/dashboard/layout.tsx` to use `DashboardShell`
+
+### 2026-05-16 — Dashboard UI Phase 3
+
+- Stats cards: total items, collections, favorite items, favorite collections
+- Collection cards: colored left border per default type, favorite star, item count badge, type label
+- Item cards: colored type icon, title, description, tags, date with pin/star indicators
+- Dashboard page composes all sections: stats, collections, pinned items, recent items
+- Switched body font to Lato via `next/font/google`
