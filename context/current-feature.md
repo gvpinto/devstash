@@ -1,18 +1,10 @@
 # Current Feature
 
-<!-- Feature name and short description -->
-
 ## Status
-
-<!-- Not Started | In Progress | Completed -->
 
 ## Goals
 
-<!-- Goals and requirements -->
-
 ## Notes
-
-<!-- Any extra notes -->
 
 ## History
 
@@ -25,3 +17,12 @@
 - Added `CLAUDE.md` with project context and stack documentation
 - Added `context/` directory with `project-overview.md`, `coding-standards.md`, `ai-interaction.md`, and `current-feature.md`
 - Pushed initial commits to `git@github.com:gvpinto/devstash.git`
+
+### 2026-05-15 — Dashboard UI Phase 1
+
+- Initialized shadcn/ui (v4.7) with Tailwind CSS v4 support
+- Installed `Button` and `Input` components
+- Created `/dashboard` route with `layout.tsx` and `page.tsx`
+- Set dark mode as default via `dark` class on root `<html>` element
+- Built top bar with centered search input, "New Collection" and "New Item" buttons (display only)
+- Added sidebar and main area placeholders
