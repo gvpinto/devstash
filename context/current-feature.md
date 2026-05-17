@@ -73,6 +73,14 @@ None
 - Added `scripts/reset-db.ts` for clearing all data via Prisma `deleteMany` (avoids Neon pooler advisory lock limitation)
 - Updated `scripts/test-db.ts` to display items grouped by collection with content previews and totals
 
+### 2026-05-17 — Dashboard Items — Live Data
+
+- Created `src/lib/db/items.ts` — `getPinnedItems()` and `getRecentItems()` Prisma fetch functions using `select` (not `include`) for efficient field projection
+- Updated `ItemCard` component: removed `itemTypeId` + mock lookup, now accepts `typeIcon`/`typeColor`/`typeName` props directly; removed `mockItemTypes` dependency
+- Updated `DashboardPage` to fetch pinned and recent items via `Promise.all`; removed all `mockItems` usage
+- Pinned section conditionally hidden when no pinned items exist
+- `mock-data.ts` is now unused for dashboard item rendering
+
 ### 2026-05-16 — Dashboard UI Phase 3
 
 - Stats cards: total items, collections, favorite items, favorite collections

@@ -1,20 +1,17 @@
 import Link from 'next/link'
 import { Pin } from 'lucide-react'
-import { mockItems } from '@/lib/mock-data'
 import { getCollectionsForDashboard, getDashboardStats } from '@/lib/db/collections'
+import { getPinnedItems, getRecentItems } from '@/lib/db/items'
 import { StatsCards } from '@/components/dashboard/stats-cards'
 import { CollectionCard } from '@/components/dashboard/collection-card'
 import { ItemCard } from '@/components/dashboard/item-card'
 
-const pinnedItems = mockItems.filter((i) => i.isPinned)
-const recentItems = [...mockItems]
-  .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-  .slice(0, 10)
-
 export default async function DashboardPage() {
-  const [collections, stats] = await Promise.all([
+  const [collections, stats, pinnedItems, recentItems] = await Promise.all([
     getCollectionsForDashboard(),
     getDashboardStats(),
+    getPinnedItems(),
+    getRecentItems(),
   ])
 
   return (
@@ -74,7 +71,9 @@ export default async function DashboardPage() {
                 key={item.id}
                 title={item.title}
                 description={item.description}
-                itemTypeId={item.itemTypeId}
+                typeIcon={item.typeIcon}
+                typeColor={item.typeColor}
+                typeName={item.typeName}
                 tags={item.tags}
                 isFavorite={item.isFavorite}
                 isPinned={item.isPinned}
@@ -102,7 +101,9 @@ export default async function DashboardPage() {
               key={item.id}
               title={item.title}
               description={item.description}
-              itemTypeId={item.itemTypeId}
+              typeIcon={item.typeIcon}
+              typeColor={item.typeColor}
+              typeName={item.typeName}
               tags={item.tags}
               isFavorite={item.isFavorite}
               isPinned={item.isPinned}
