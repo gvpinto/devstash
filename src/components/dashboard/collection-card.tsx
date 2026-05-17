@@ -1,6 +1,15 @@
 import Link from 'next/link'
-import { Star, MoreHorizontal } from 'lucide-react'
-import { mockItemTypes } from '@/lib/mock-data'
+import { Star, MoreHorizontal, Code, Sparkles, Terminal, StickyNote, File, Image, Link as Link2 } from 'lucide-react'
+
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
+  Code,
+  Sparkles,
+  Terminal,
+  StickyNote,
+  File,
+  Image,
+  Link: Link2,
+}
 
 interface CollectionCardProps {
   id: string
@@ -8,7 +17,9 @@ interface CollectionCardProps {
   description: string | null | undefined
   itemCount: number
   isFavorite: boolean
-  defaultTypeId: string | null | undefined
+  typeColor: string
+  typeName: string
+  typeIcons: Array<{ icon: string; color: string }>
 }
 
 export function CollectionCard({
@@ -17,16 +28,18 @@ export function CollectionCard({
   description,
   itemCount,
   isFavorite,
-  defaultTypeId,
+  typeColor,
+  typeName,
+  typeIcons,
 }: CollectionCardProps) {
-  const defaultType = mockItemTypes.find((t) => t.id === defaultTypeId)
-  const accentColor = defaultType?.color ?? '#6b7280'
+  const visibleIcons = typeIcons.slice(0, 4)
+  const overflow = typeIcons.length - visibleIcons.length
 
   return (
     <Link
       href={`/collections/${id}`}
       className="group block rounded-lg border border-border bg-card p-4 hover:border-border/80 hover:bg-card/80 transition-colors"
-      style={{ borderLeftColor: accentColor, borderLeftWidth: '3px' }}
+      style={{ borderLeftColor: typeColor, borderLeftWidth: '3px' }}
     >
       <div className="flex items-start justify-between gap-2 mb-2">
         <h3 className="text-sm font-semibold text-foreground leading-snug group-hover:text-foreground/90 truncate">
@@ -44,16 +57,31 @@ export function CollectionCard({
         {description ?? 'No description'}
       </p>
 
-      <div className="flex items-center justify-between">
-        <div
-          className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium"
-          style={{ backgroundColor: accentColor + '20', color: accentColor }}
-        >
-          {itemCount} items
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          {visibleIcons.length > 0 && (
+            <div className="flex items-center gap-1">
+              {visibleIcons.map(({ icon, color }, i) => {
+                const Icon = ICON_MAP[icon]
+                return Icon ? (
+                  <Icon key={i} className="size-3" style={{ color }} />
+                ) : null
+              })}
+              {overflow > 0 && (
+                <span className="text-[10px] text-muted-foreground/50">+{overflow}</span>
+              )}
+            </div>
+          )}
+          <div
+            className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium"
+            style={{ backgroundColor: typeColor + '20', color: typeColor }}
+          >
+            {itemCount} {itemCount === 1 ? 'item' : 'items'}
+          </div>
         </div>
-        {defaultType && (
+        {typeName && (
           <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wide">
-            {defaultType.name}
+            {typeName}
           </span>
         )}
       </div>

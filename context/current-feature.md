@@ -53,6 +53,15 @@ None
 - Added `scripts/test-db.ts` to verify connectivity and seeded data
 - Added `db:studio` and `postinstall` scripts to `package.json`
 
+### 2026-05-17 — Dashboard Collections — Live Data
+
+- Created `src/lib/db/collections.ts` — `getCollectionsForDashboard()` and `getDashboardStats()` Prisma fetch functions
+- Collection card border color now derived from the most-used item type in each collection (not `defaultTypeId`)
+- Updated `CollectionCard` component: removed mock data dependency, added `typeColor`/`typeName`/`typeIcons` props, renders small type icon row in card footer (max 4 icons + overflow count)
+- Made `DashboardPage` async; replaced all mock collection/stats data with real Neon queries via `Promise.all`
+- Stats cards now show live counts (items, collections, favorites)
+- Items sections (Pinned, Recent) remain on mock data — separate feature
+
 ### 2026-05-16 — Seed Data
 
 - Rewrote `prisma/seed.ts` per spec in `context/features/seed-spec.md`

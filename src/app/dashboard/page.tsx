@@ -1,24 +1,22 @@
 import Link from 'next/link'
 import { Pin } from 'lucide-react'
-import {
-  mockCollections,
-  mockItems,
-  mockItemTypeCounts,
-} from '@/lib/mock-data'
+import { mockItems } from '@/lib/mock-data'
+import { getCollectionsForDashboard, getDashboardStats } from '@/lib/db/collections'
 import { StatsCards } from '@/components/dashboard/stats-cards'
 import { CollectionCard } from '@/components/dashboard/collection-card'
 import { ItemCard } from '@/components/dashboard/item-card'
-
-const totalItems = Object.values(mockItemTypeCounts).reduce((a, b) => a + b, 0)
-const favoriteCollections = mockCollections.filter((c) => c.isFavorite).length
-const favoriteItems = mockItems.filter((i) => i.isFavorite).length
 
 const pinnedItems = mockItems.filter((i) => i.isPinned)
 const recentItems = [...mockItems]
   .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
   .slice(0, 10)
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const [collections, stats] = await Promise.all([
+    getCollectionsForDashboard(),
+    getDashboardStats(),
+  ])
+
   return (
     <div className="space-y-8 max-w-5xl">
       {/* Page heading */}
@@ -29,10 +27,10 @@ export default function DashboardPage() {
 
       {/* Stats */}
       <StatsCards
-        totalItems={totalItems}
-        totalCollections={mockCollections.length}
-        favoriteItems={favoriteItems}
-        favoriteCollections={favoriteCollections}
+        totalItems={stats.totalItems}
+        totalCollections={stats.totalCollections}
+        favoriteItems={stats.favoriteItems}
+        favoriteCollections={stats.favoriteCollections}
       />
 
       {/* Collections */}
@@ -47,7 +45,7 @@ export default function DashboardPage() {
           </Link>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {mockCollections.map((col) => (
+          {collections.map((col) => (
             <CollectionCard
               key={col.id}
               id={col.id}
@@ -55,7 +53,9 @@ export default function DashboardPage() {
               description={col.description}
               itemCount={col.itemCount}
               isFavorite={col.isFavorite}
-              defaultTypeId={col.defaultTypeId}
+              typeColor={col.typeColor}
+              typeName={col.typeName}
+              typeIcons={col.typeIcons}
             />
           ))}
         </div>
