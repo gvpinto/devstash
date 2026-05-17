@@ -1,31 +1,18 @@
 # Current Feature
 
-Seed Data
+None
 
 ## Status
 
-Complete
+—
 
 ## Goals
 
-- Rewrite `prisma/seed.ts` to match the spec in `context/features/seed-spec.md`
-- Seed demo user with hashed password (bcryptjs, 12 rounds)
-- Seed all 7 system item types
-- Seed 5 collections with realistic content:
-  - **React Patterns** — 3 TypeScript snippets
-  - **AI Workflows** — 3 prompts
-  - **DevOps** — 1 snippet, 1 command, 2 links
-  - **Terminal Commands** — 4 commands
-  - **Design Resources** — 4 links
-- All seed operations must be idempotent (upsert)
+—
 
 ## Notes
 
-- User `isPro: false` (unlike old seed); `emailVerified` set to current date
-- Password: `12345678` hashed with bcryptjs at 12 rounds — requires installing `bcryptjs` + `@types/bcryptjs`
-- Links must use real, working URLs
-- Item types: same 7 as before but `link` is last in the spec order
-- Spec lives at `context/features/seed-spec.md`
+—
 
 ## History
 
@@ -65,6 +52,17 @@ Complete
 - Added `prisma/seed.ts` with idempotent seed data (7 item types, 1 user, 6 collections, 5 items, 10 tags)
 - Added `scripts/test-db.ts` to verify connectivity and seeded data
 - Added `db:studio` and `postinstall` scripts to `package.json`
+
+### 2026-05-16 — Seed Data
+
+- Rewrote `prisma/seed.ts` per spec in `context/features/seed-spec.md`
+- Added `password String?` to `User` model; migrated (`add_password_to_user`)
+- Installed `bcryptjs` + `@types/bcryptjs`; demo user password hashed at 12 rounds
+- Demo user: `demo@devstash.io`, `isPro: false`, `emailVerified` set on seed
+- Seeded 7 system item types, 5 collections, 18 items (snippets, prompts, commands, links), 16 tags
+- Added `db:seed` and `db:reset` npm scripts; added `prisma.seed` config to `package.json`
+- Added `scripts/reset-db.ts` for clearing all data via Prisma `deleteMany` (avoids Neon pooler advisory lock limitation)
+- Updated `scripts/test-db.ts` to display items grouped by collection with content previews and totals
 
 ### 2026-05-16 — Dashboard UI Phase 3
 
