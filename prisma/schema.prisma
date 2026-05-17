@@ -69,6 +69,7 @@ model User {
   name                 String?
   email                String?   @unique
   emailVerified        DateTime? @map("email_verified")
+  password             String?
   image                String?
   isPro                Boolean   @default(false) @map("is_pro")
   stripeCustomerId     String?   @unique @map("stripe_customer_id")
