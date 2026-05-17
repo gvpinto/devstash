@@ -2,7 +2,6 @@ import {
   Code, Sparkles, Terminal, StickyNote, File, Image, Link as LinkIcon,
   Pin, Star,
 } from 'lucide-react'
-import { mockItemTypes } from '@/lib/mock-data'
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Code,
@@ -17,25 +16,27 @@ const ICON_MAP: Record<string, React.ElementType> = {
 interface ItemCardProps {
   title: string
   description: string | null | undefined
-  itemTypeId: string
+  typeIcon: string
+  typeColor: string
+  typeName: string
   tags: string[]
   isFavorite: boolean
   isPinned: boolean
-  createdAt: string
+  createdAt: Date | string
 }
 
 export function ItemCard({
   title,
   description,
-  itemTypeId,
+  typeIcon,
+  typeColor,
   tags,
   isFavorite,
   isPinned,
   createdAt,
 }: ItemCardProps) {
-  const itemType = mockItemTypes.find((t) => t.id === itemTypeId)
-  const Icon = itemType ? (ICON_MAP[itemType.icon] ?? Code) : Code
-  const color = itemType?.color ?? '#6b7280'
+  const Icon = ICON_MAP[typeIcon] ?? Code
+  const color = typeColor
 
   const date = new Date(createdAt).toLocaleDateString('en-US', {
     month: 'short',
