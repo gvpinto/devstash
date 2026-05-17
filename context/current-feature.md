@@ -1,26 +1,31 @@
 # Current Feature
 
-Prisma + Neon PostgreSQL Setup
+Seed Data
 
 ## Status
 
-In Progress
+Complete
 
 ## Goals
 
-- Install Prisma 7 and configure with Neon serverless PostgreSQL
-- Define Prisma schema: all data models from `project-overview.md` (User, ItemType, Item, Collection, ItemCollection, Tag, TagsOnItems, ContentType enum) plus NextAuth models (Account, Session, VerificationToken)
-- Add appropriate indexes and cascade deletes
-- Create and run initial migration via `prisma migrate dev` (never `db push`)
-- Set up Prisma client singleton in `src/lib/prisma.ts`
-- Configure `.env` with `DATABASE_URL` pointing to Neon dev branch
+- Rewrite `prisma/seed.ts` to match the spec in `context/features/seed-spec.md`
+- Seed demo user with hashed password (bcryptjs, 12 rounds)
+- Seed all 7 system item types
+- Seed 5 collections with realistic content:
+  - **React Patterns** — 3 TypeScript snippets
+  - **AI Workflows** — 3 prompts
+  - **DevOps** — 1 snippet, 1 command, 2 links
+  - **Terminal Commands** — 4 commands
+  - **Design Resources** — 4 links
+- All seed operations must be idempotent (upsert)
 
 ## Notes
 
-- Use Prisma 7 (breaking changes from v6 — review upgrade guide before implementing)
-- Dev database = Neon dev branch (`DATABASE_URL`); prod = separate Neon production branch
-- Always migrate; never `prisma db push`
-- NextAuth models must match the Auth.js v5 adapter expectations
+- User `isPro: false` (unlike old seed); `emailVerified` set to current date
+- Password: `12345678` hashed with bcryptjs at 12 rounds — requires installing `bcryptjs` + `@types/bcryptjs`
+- Links must use real, working URLs
+- Item types: same 7 as before but `link` is last in the spec order
+- Spec lives at `context/features/seed-spec.md`
 
 ## History
 
@@ -48,6 +53,18 @@ In Progress
 - Created `src/components/dashboard/sidebar.tsx` — types list with colored icons + counts + `/items/TYPE` links, favorites + recent collections, user avatar with settings icon
 - Created `src/components/dashboard/dashboard-shell.tsx` — client shell with `PanelLeft` toggle, `⌘K` search hint, smooth width-transition collapse on desktop, overlay drawer on mobile
 - Refactored `src/app/dashboard/layout.tsx` to use `DashboardShell`
+
+### 2026-05-16 — Prisma + Neon PostgreSQL Setup
+
+- Installed Prisma 7 (`prisma-client` provider, Rust-free) with `@prisma/adapter-neon` and Neon serverless driver
+- Defined full schema: all core models + NextAuth v5 models (Account, Session, VerificationToken), indexes, cascade deletes
+- Created `prisma.config.ts` with `defineConfig()` — `DATABASE_URL` lives here, not in `schema.prisma` (Prisma 7 breaking change)
+- Generated client to `src/generated/prisma/client/` (import from `client/client`, no `index.ts` in Prisma 7)
+- Applied initial migration to Neon dev branch via `prisma migrate dev --name init`
+- Set up `src/lib/prisma.ts` — global singleton `PrismaClient` with `PrismaNeon` driver adapter + WebSocket support
+- Added `prisma/seed.ts` with idempotent seed data (7 item types, 1 user, 6 collections, 5 items, 10 tags)
+- Added `scripts/test-db.ts` to verify connectivity and seeded data
+- Added `db:studio` and `postinstall` scripts to `package.json`
 
 ### 2026-05-16 — Dashboard UI Phase 3
 
