@@ -5,8 +5,15 @@ import { Search, Plus, FolderPlus, PanelLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Sidebar } from './sidebar'
+import type { SidebarData } from '@/lib/db/items'
 
-export function DashboardShell({ children }: { children: React.ReactNode }) {
+export function DashboardShell({
+  children,
+  sidebarData,
+}: {
+  children: React.ReactNode
+  sidebarData: SidebarData
+}) {
   const [open, setOpen] = useState(true)
 
   return (
@@ -53,7 +60,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             (open ? 'md:w-56' : 'md:w-0 md:border-r-0 md:invisible')
           }
         >
-          <Sidebar />
+          <Sidebar {...sidebarData} />
         </aside>
 
         {/* Mobile drawer — always overlay */}
@@ -64,7 +71,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               onClick={() => setOpen(false)}
             />
             <aside className="absolute left-0 top-0 h-full w-64 border-r border-sidebar-border shadow-xl">
-              <Sidebar onClose={() => setOpen(false)} />
+              <Sidebar {...sidebarData} onClose={() => setOpen(false)} />
             </aside>
           </div>
         )}

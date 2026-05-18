@@ -1,9 +1,11 @@
 import { DashboardShell } from '@/components/dashboard/dashboard-shell'
+import { getSidebarData } from '@/lib/db/items'
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return <DashboardShell>{children}</DashboardShell>
+  const sidebarData = await getSidebarData()
+  return <DashboardShell sidebarData={sidebarData}>{children}</DashboardShell>
 }

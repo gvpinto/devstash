@@ -1,5 +1,84 @@
 import { prisma } from '@/lib/prisma'
 
+export interface SidebarItemType {
+  id: string
+  name: string
+  icon: string
+  color: string
+  itemCount: number
+}
+
+export interface SidebarCollection {
+  id: string
+  name: string
+  isFavorite: boolean
+  dominantColor: string
+}
+
+export interface SidebarData {
+  itemTypes: SidebarItemType[]
+  favoriteCollections: SidebarCollection[]
+  recentCollections: SidebarCollection[]
+}
+
+export async function getSidebarData(): Promise<SidebarData> {
+  const [itemTypes, collections] = await Promise.all([
+    prisma.itemType.findMany({
+      where: { isSystem: true },
+      include: { _count: { select: { items: true } } },
+    }),
+    prisma.collection.findMany({
+      include: {
+        items: {
+          include: {
+            item: { include: { itemType: true } },
+          },
+        },
+      },
+      orderBy: { updatedAt: 'desc' },
+    }),
+  ])
+
+  const TYPE_ORDER = ['Snippets', 'Prompts', 'Commands', 'Notes', 'Files', 'Images', 'Links']
+  itemTypes.sort((a, b) => {
+    const ai = TYPE_ORDER.indexOf(a.name)
+    const bi = TYPE_ORDER.indexOf(b.name)
+    return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi)
+  })
+
+  const sidebarItemTypes: SidebarItemType[] = itemTypes.map((t) => ({
+    id: t.id,
+    name: t.name,
+    icon: t.icon,
+    color: t.color,
+    itemCount: t._count.items,
+  }))
+
+  function getDominantColor(col: (typeof collections)[0]): string {
+    const typeCounts: Record<string, { count: number; color: string }> = {}
+    for (const { item } of col.items) {
+      const t = item.itemType
+      if (!typeCounts[t.id]) typeCounts[t.id] = { count: 0, color: t.color }
+      typeCounts[t.id].count++
+    }
+    const sorted = Object.values(typeCounts).sort((a, b) => b.count - a.count)
+    return sorted[0]?.color ?? '#6b7280'
+  }
+
+  const all: SidebarCollection[] = collections.map((col) => ({
+    id: col.id,
+    name: col.name,
+    isFavorite: col.isFavorite,
+    dominantColor: getDominantColor(col),
+  }))
+
+  return {
+    itemTypes: sidebarItemTypes,
+    favoriteCollections: all.filter((c) => c.isFavorite),
+    recentCollections: all.filter((c) => !c.isFavorite).slice(0, 5),
+  }
+}
+
 export interface ItemSummary {
   id: string
   title: string
