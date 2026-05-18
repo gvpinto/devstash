@@ -81,6 +81,16 @@ None
 - Pinned section conditionally hidden when no pinned items exist
 - `mock-data.ts` is now unused for dashboard item rendering
 
+### 2026-05-18 — Stats & Sidebar — Live Data
+
+- Added `getSidebarData()` to `src/lib/db/items.ts` — fetches system item types with per-type item counts and collections with dominant type color for the sidebar
+- Updated `Sidebar` component to accept `itemTypes`, `favoriteCollections`, `recentCollections` as props; removed all mock data imports
+- Item types displayed in custom order: Snippets, Prompts, Commands, Notes, Files, Images, Links
+- Favorite collections show a star icon; recent collections show a colored circle based on the most-used item type
+- Added "View all collections" link at the bottom of the Collections section → `/collections`
+- Made `DashboardLayout` async to fetch sidebar data server-side; passes `sidebarData` to `DashboardShell`
+- `DashboardShell` accepts `sidebarData` prop and spreads it to `<Sidebar>` for both desktop and mobile drawer
+
 ### 2026-05-16 — Dashboard UI Phase 3
 
 - Stats cards: total items, collections, favorite items, favorite collections
