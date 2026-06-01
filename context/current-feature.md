@@ -1,7 +1,5 @@
 # Current Feature
 
-None
-
 ## Status
 
 —
@@ -90,6 +88,12 @@ None
 - Added "View all collections" link at the bottom of the Collections section → `/collections`
 - Made `DashboardLayout` async to fetch sidebar data server-side; passes `sidebarData` to `DashboardShell`
 - `DashboardShell` accepts `sidebarData` prop and spreads it to `<Sidebar>` for both desktop and mobile drawer
+
+### 2026-06-01 — Add Pro Badge to Sidebar
+
+- Installed shadcn/ui `Badge` component (`src/components/ui/badge.tsx`)
+- Updated `Sidebar` component to render a subtle outline "PRO" badge inline after the type name for Files and Images
+- Badge uses `variant="outline"` with muted colors (`text-sidebar-foreground/40`, `border-sidebar-foreground/20`) and tight sizing (`h-4`, `text-[9px]`) to stay unobtrusive
 
 ### 2026-05-16 — Dashboard UI Phase 3
 

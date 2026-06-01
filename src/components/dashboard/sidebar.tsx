@@ -6,6 +6,7 @@ import {
   Star, Settings, X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Badge } from '@/components/ui/badge'
 import type { SidebarData } from '@/lib/db/items'
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -57,6 +58,11 @@ export function Sidebar({ itemTypes, favoriteCollections, recentCollections, onC
                   <span className="flex items-center gap-2.5">
                     {Icon && <Icon className="size-3.5 shrink-0" style={{ color: type.color }} />}
                     {type.name}
+                    {(type.name === 'Files' || type.name === 'Images') && (
+                      <Badge variant="outline" className="h-4 px-1 text-[9px] font-semibold tracking-wide text-sidebar-foreground/40 border-sidebar-foreground/20">
+                        PRO
+                      </Badge>
+                    )}
                   </span>
                   <span className="text-xs text-sidebar-foreground/40">{type.itemCount}</span>
                 </Link>
