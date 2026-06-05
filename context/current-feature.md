@@ -2,29 +2,15 @@
 
 ## Status
 
-In progress
+—
 
 ## Goals
 
-Apply low-risk code-quality quick wins surfaced by the 2026-06-04 code-scanner audit. No behavior changes, no auth dependency.
-
-### Checklist
-
-- [x] #4 — Guard `DATABASE_URL` in `src/lib/prisma.ts` (throw clear error instead of non-null assertion)
-- [x] #6 — Extract shared `ICON_MAP` to `src/lib/icon-map.ts`; update `sidebar.tsx`, `collection-card.tsx`, `item-card.tsx` to import from it
-- [x] #7 — Fix `key={i}` (array index) → `key={\`${icon}-${color}\`}` in `CollectionCard` icon row
-- [x] #10 — Remove unnecessary `'use client'` from `src/components/dashboard/sidebar.tsx`
-- [x] #12 — Add `src/app/dashboard/loading.tsx` with a skeleton layout to prevent blank screen on slow DB cold-starts
-- [x] #13 — Resolved automatically by #6 (React namespace no longer used directly in components)
-- [x] #16 — Add `aria-label` to each icon in the `CollectionCard` icon row
+—
 
 ## Notes
 
-- Skipped #2/#3 (overfetch `select` rewrites) — correct fixes but touch DB query logic; save for a dedicated pass
-- Skipped #5 (`typeName` unused in `ItemCard`) — needs product decision on whether to render it
-- Skipped #8/#1 (user scoping, hardcoded identity) — blocked on auth implementation
-- Skipped #9 (sequential layout await) — needs React `cache()` design decision
-- Skipped #14/#15 — dev script only, not production code
+—
 
 ## History
 
@@ -108,6 +94,16 @@ Apply low-risk code-quality quick wins surfaced by the 2026-06-04 code-scanner a
 - Installed shadcn/ui `Badge` component (`src/components/ui/badge.tsx`)
 - Updated `Sidebar` component to render a subtle outline "PRO" badge inline after the type name for Files and Images
 - Badge uses `variant="outline"` with muted colors (`text-sidebar-foreground/40`, `border-sidebar-foreground/20`) and tight sizing (`h-4`, `text-[9px]`) to stay unobtrusive
+
+### 2026-06-05 — Code Quality Quick Wins (Audit)
+
+- Extracted shared `ICON_MAP` to `src/lib/icon-map.ts` — single source of truth used by `sidebar.tsx`, `collection-card.tsx`, and `item-card.tsx`; removed three duplicate local definitions
+- Guarded `DATABASE_URL` in `src/lib/prisma.ts` — throws a clear error instead of silently passing `undefined` via non-null assertion
+- Fixed index-based React `key` in `CollectionCard` icon row → stable `` `${icon}-${color}` `` key
+- Removed redundant `'use client'` directive from `sidebar.tsx`
+- Added `src/app/dashboard/loading.tsx` — animated skeleton matching the dashboard layout, shown during Neon cold-starts
+- Added `aria-label={icon}` to each type icon in `CollectionCard` icon row for screen reader support
+- Remaining audit items deferred: overfetch `select` rewrites (#2/#3), `typeName` render decision (#5), auth-gated items (#1/#8), sequential layout await (#9)
 
 ### 2026-05-16 — Dashboard UI Phase 3
 
