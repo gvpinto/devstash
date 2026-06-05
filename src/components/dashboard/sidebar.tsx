@@ -1,23 +1,9 @@
-'use client'
-
 import Link from 'next/link'
-import {
-  Code, Sparkles, Terminal, StickyNote, File, Image, Link as LinkIcon,
-  Star, Settings, X,
-} from 'lucide-react'
+import { Star, Settings, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import type { SidebarData } from '@/lib/db/items'
-
-const ICON_MAP: Record<string, React.ElementType> = {
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  File,
-  Image,
-  Link: LinkIcon,
-}
+import { ICON_MAP } from '@/lib/icon-map'
 
 interface SidebarProps extends SidebarData {
   onClose?: () => void

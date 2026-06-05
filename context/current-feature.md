@@ -2,15 +2,29 @@
 
 ## Status
 
-—
+In progress
 
 ## Goals
 
-—
+Apply low-risk code-quality quick wins surfaced by the 2026-06-04 code-scanner audit. No behavior changes, no auth dependency.
+
+### Checklist
+
+- [x] #4 — Guard `DATABASE_URL` in `src/lib/prisma.ts` (throw clear error instead of non-null assertion)
+- [x] #6 — Extract shared `ICON_MAP` to `src/lib/icon-map.ts`; update `sidebar.tsx`, `collection-card.tsx`, `item-card.tsx` to import from it
+- [x] #7 — Fix `key={i}` (array index) → `key={\`${icon}-${color}\`}` in `CollectionCard` icon row
+- [x] #10 — Remove unnecessary `'use client'` from `src/components/dashboard/sidebar.tsx`
+- [x] #12 — Add `src/app/dashboard/loading.tsx` with a skeleton layout to prevent blank screen on slow DB cold-starts
+- [x] #13 — Resolved automatically by #6 (React namespace no longer used directly in components)
+- [x] #16 — Add `aria-label` to each icon in the `CollectionCard` icon row
 
 ## Notes
 
-—
+- Skipped #2/#3 (overfetch `select` rewrites) — correct fixes but touch DB query logic; save for a dedicated pass
+- Skipped #5 (`typeName` unused in `ItemCard`) — needs product decision on whether to render it
+- Skipped #8/#1 (user scoping, hardcoded identity) — blocked on auth implementation
+- Skipped #9 (sequential layout await) — needs React `cache()` design decision
+- Skipped #14/#15 — dev script only, not production code
 
 ## History
 

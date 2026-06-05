@@ -1,15 +1,6 @@
 import Link from 'next/link'
-import { Star, MoreHorizontal, Code, Sparkles, Terminal, StickyNote, File, Image, Link as Link2 } from 'lucide-react'
-
-const ICON_MAP: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
-  Code,
-  Sparkles,
-  Terminal,
-  StickyNote,
-  File,
-  Image,
-  Link: Link2,
-}
+import { Star, MoreHorizontal } from 'lucide-react'
+import { ICON_MAP } from '@/lib/icon-map'
 
 interface CollectionCardProps {
   id: string
@@ -61,10 +52,10 @@ export function CollectionCard({
         <div className="flex items-center gap-2">
           {visibleIcons.length > 0 && (
             <div className="flex items-center gap-1">
-              {visibleIcons.map(({ icon, color }, i) => {
+              {visibleIcons.map(({ icon, color }) => {
                 const Icon = ICON_MAP[icon]
                 return Icon ? (
-                  <Icon key={i} className="size-3" style={{ color }} />
+                  <Icon key={`${icon}-${color}`} className="size-3" style={{ color }} aria-label={icon} />
                 ) : null
               })}
               {overflow > 0 && (
