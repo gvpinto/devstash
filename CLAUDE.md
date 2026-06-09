@@ -45,3 +45,11 @@ public/        # static assets (currently empty)
 ```
 
 All routes live under `src/app/` following the App Router file-system convention.
+
+## Neon Database
+
+- **Default project:** `red-wildflower-76913259` (devstash)
+- **Default branch:** `br-flat-sound-ap2xnqjb` (development)
+- **Production branch:** `br-steep-wave-ap3blh8o` — NEVER use this unless explicitly told to
+
+Always pass `projectId: red-wildflower-76913259` and `branchId: br-flat-sound-ap2xnqjb` to every Neon MCP tool call unless the user explicitly says "production". If the user says production, confirm before proceeding.
