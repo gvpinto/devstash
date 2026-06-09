@@ -1,44 +1,16 @@
-# Current Feature — Auth Setup: NextAuth + GitHub Provider
+# Current Feature
 
 ## Status
 
-In Progress
+—
 
 ## Goals
 
-- Install NextAuth v5 (`next-auth@beta`) and `@auth/prisma-adapter`
-- Set up split auth config pattern for edge compatibility
-- Add GitHub OAuth provider
-- Protect `/dashboard/*` routes using Next.js 16 proxy
-- Redirect unauthenticated users to sign-in
+—
 
 ## Notes
 
-**Files to create:**
-1. `src/auth.config.ts` — Edge-compatible config (providers only, no adapter)
-2. `src/auth.ts` — Full config with Prisma adapter and JWT strategy
-3. `src/app/api/auth/[...nextauth]/route.ts` — Export handlers from auth.ts
-4. `src/proxy.ts` — Route protection with redirect logic (must be at `src/proxy.ts`, same level as `app/`)
-5. `src/types/next-auth.d.ts` — Extend Session type with user.id
-
-**Key gotchas:**
-- Use `next-auth@beta` (not `@latest` which installs v4)
-- Use named export: `export const proxy = auth(...)` not default export
-- Use `session: { strategy: 'jwt' }` with split config pattern
-- Don't set custom `pages.signIn` — use NextAuth's default page
-- Use Context7 to verify newest config and conventions
-
-**Environment variables needed:**
-```
-AUTH_SECRET=
-AUTH_GITHUB_ID=
-AUTH_GITHUB_SECRET=
-```
-
-**Testing:**
-1. Go to `/dashboard` — should redirect to sign-in
-2. Click "Sign in with GitHub"
-3. Verify redirect back to `/dashboard` after auth
+—
 
 ## History
 
@@ -132,6 +104,17 @@ AUTH_GITHUB_SECRET=
 - Added `src/app/dashboard/loading.tsx` — animated skeleton matching the dashboard layout, shown during Neon cold-starts
 - Added `aria-label={icon}` to each type icon in `CollectionCard` icon row for screen reader support
 - Remaining audit items deferred: overfetch `select` rewrites (#2/#3), `typeName` render decision (#5), auth-gated items (#1/#8), sequential layout await (#9)
+
+### 2026-06-09 — Auth Phase 1: NextAuth v5 + GitHub OAuth
+
+- Installed `next-auth@beta` and `@auth/prisma-adapter`
+- Created `src/auth.config.ts` — edge-compatible config with GitHub provider only (no adapter)
+- Created `src/auth.ts` — full config with `PrismaAdapter`, `session: { strategy: 'jwt' }`, and callbacks to persist `user.id` through JWT into session
+- Created `src/app/api/auth/[...nextauth]/route.ts` — exports `GET` and `POST` handlers
+- Created `src/proxy.ts` — Next.js 16 proxy (named `proxy` export) wrapping edge-compatible auth; redirects unauthenticated users from `/dashboard/*` to `/api/auth/signin?callbackUrl=...`
+- Created `src/types/next-auth.d.ts` — extends `Session` with `user.id: string`
+- Generated `AUTH_SECRET` via `openssl rand -base64 32`; `.env.local` stores all three auth vars (gitignored)
+- Split config pattern required due to Neon/Prisma not being edge-compatible; proxy imports only `auth.config.ts`
 
 ### 2026-05-16 — Dashboard UI Phase 3
 
