@@ -1,16 +1,26 @@
-# Current Feature
+# Current Feature: Auth Phase 2 — Email/Password Credentials
 
 ## Status
 
-—
+In Progress
 
 ## Goals
 
-—
+- Add Credentials provider (email/password) to NextAuth v5 alongside existing GitHub OAuth
+- Create `POST /api/auth/register` route — accepts name, email, password, confirmPassword
+- Password hashed with bcryptjs (12 rounds); user stored in Neon via Prisma
+- Registration validates passwords match and checks for existing email
+- Split-config pattern preserved: `auth.config.ts` gets placeholder `authorize: () => null`, `auth.ts` overrides with real bcrypt validation
+- Sign-in via `/api/auth/signin` with email/password redirects to `/dashboard`
+- GitHub OAuth continues to work unchanged
 
 ## Notes
 
-—
+- `password String?` field already exists on `User` model (added in Seed Data phase)
+- `bcryptjs` + `@types/bcryptjs` already installed
+- Credentials provider must appear in `auth.config.ts` as a placeholder (edge-compatible) and be overridden in `auth.ts` with bcrypt logic — required by the split-config pattern
+- Registration route: `/api/auth/register` (Next.js API route, not a Server Action)
+- Return `{ success, error }` pattern from registration route
 
 ## History
 
