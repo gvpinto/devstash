@@ -1,26 +1,16 @@
-# Current Feature: Auth Phase 2 — Email/Password Credentials
+# Current Feature
 
 ## Status
 
-In Progress
+—
 
 ## Goals
 
-- Add Credentials provider (email/password) to NextAuth v5 alongside existing GitHub OAuth
-- Create `POST /api/auth/register` route — accepts name, email, password, confirmPassword
-- Password hashed with bcryptjs (12 rounds); user stored in Neon via Prisma
-- Registration validates passwords match and checks for existing email
-- Split-config pattern preserved: `auth.config.ts` gets placeholder `authorize: () => null`, `auth.ts` overrides with real bcrypt validation
-- Sign-in via `/api/auth/signin` with email/password redirects to `/dashboard`
-- GitHub OAuth continues to work unchanged
+—
 
 ## Notes
 
-- `password String?` field already exists on `User` model (added in Seed Data phase)
-- `bcryptjs` + `@types/bcryptjs` already installed
-- Credentials provider must appear in `auth.config.ts` as a placeholder (edge-compatible) and be overridden in `auth.ts` with bcrypt logic — required by the split-config pattern
-- Registration route: `/api/auth/register` (Next.js API route, not a Server Action)
-- Return `{ success, error }` pattern from registration route
+—
 
 ## History
 
@@ -133,3 +123,11 @@ In Progress
 - Item cards: colored type icon, title, description, tags, date with pin/star indicators
 - Dashboard page composes all sections: stats, collections, pinned items, recent items
 - Switched body font to Lato via `next/font/google`
+
+### 2026-06-09 — Auth Phase 2: Email/Password Credentials
+
+- Added `Credentials` provider to `src/auth.config.ts` with `authorize: () => null` placeholder (edge-compatible)
+- Overrode Credentials in `src/auth.ts` with real bcrypt validation: looks up user by email, compares hashed password, returns user object on success
+- Created `src/app/api/auth/register/route.ts` — `POST /api/auth/register` validates all fields, rejects password mismatches and duplicate emails, hashes at 12 rounds, creates user in Neon
+- GitHub OAuth provider unaffected; split-config pattern preserved
+- `password String?` field and `bcryptjs` were already in place from the Seed Data phase
