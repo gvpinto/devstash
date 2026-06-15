@@ -1,16 +1,24 @@
 import Link from 'next/link'
-import { Star, Settings, X } from 'lucide-react'
+import { Star, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import type { SidebarData } from '@/lib/db/items'
 import { ICON_MAP } from '@/lib/icon-map'
+import { UserDropdown } from './user-dropdown'
+
+interface SidebarUser {
+  name: string | null
+  email: string | null
+  image: string | null
+}
 
 interface SidebarProps extends SidebarData {
+  user?: SidebarUser | null
   onClose?: () => void
   className?: string
 }
 
-export function Sidebar({ itemTypes, favoriteCollections, recentCollections, onClose, className }: SidebarProps) {
+export function Sidebar({ itemTypes, favoriteCollections, recentCollections, user, onClose, className }: SidebarProps) {
   return (
     <div className={cn('flex h-full flex-col bg-sidebar text-sidebar-foreground', className)}>
       {onClose && (
@@ -115,23 +123,16 @@ export function Sidebar({ itemTypes, favoriteCollections, recentCollections, onC
         </section>
       </div>
 
-      {/* User avatar */}
-      <div className="border-t border-sidebar-border px-3 py-3">
-        <div className="flex items-center gap-2.5 rounded-md px-2 py-1.5 hover:bg-sidebar-accent transition-colors cursor-pointer">
-          <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-sidebar-primary text-[11px] font-bold text-sidebar-primary-foreground">
-            D
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium leading-tight text-sidebar-foreground truncate">
-              Demo User
-            </p>
-            <p className="text-[11px] text-sidebar-foreground/40 truncate">
-              demo@devstash.io
-            </p>
-          </div>
-          <Settings className="size-3.5 shrink-0 text-sidebar-foreground/40" />
+      {/* User section */}
+      {user !== undefined && (
+        <div className="border-t border-sidebar-border px-3 py-3">
+          <UserDropdown
+            name={user?.name ?? null}
+            email={user?.email ?? null}
+            image={user?.image ?? null}
+          />
         </div>
-      </div>
+      )}
     </div>
   )
 }
