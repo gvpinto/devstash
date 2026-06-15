@@ -7,12 +7,20 @@ import { Input } from '@/components/ui/input'
 import { Sidebar } from './sidebar'
 import type { SidebarData } from '@/lib/db/items'
 
+interface SidebarUser {
+  name: string | null
+  email: string | null
+  image: string | null
+}
+
 export function DashboardShell({
   children,
   sidebarData,
+  user,
 }: {
   children: React.ReactNode
   sidebarData: SidebarData
+  user?: SidebarUser | null
 }) {
   const [open, setOpen] = useState(true)
 
@@ -60,7 +68,7 @@ export function DashboardShell({
             (open ? 'md:w-56' : 'md:w-0 md:border-r-0 md:invisible')
           }
         >
-          <Sidebar {...sidebarData} />
+          <Sidebar {...sidebarData} user={user} />
         </aside>
 
         {/* Mobile drawer — always overlay */}
@@ -71,7 +79,7 @@ export function DashboardShell({
               onClick={() => setOpen(false)}
             />
             <aside className="absolute left-0 top-0 h-full w-64 border-r border-sidebar-border shadow-xl">
-              <Sidebar {...sidebarData} onClose={() => setOpen(false)} />
+              <Sidebar {...sidebarData} user={user} onClose={() => setOpen(false)} />
             </aside>
           </div>
         )}
