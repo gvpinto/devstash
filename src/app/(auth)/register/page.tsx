@@ -37,7 +37,11 @@ export default function RegisterPage() {
         setError(data.error ?? 'Registration failed.')
         return
       }
-      router.push(`/verify-email?email=${encodeURIComponent(email)}`)
+      if (data.skipVerification) {
+        router.push('/sign-in?verified=true')
+      } else {
+        router.push(`/verify-email?email=${encodeURIComponent(email)}`)
+      }
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {
