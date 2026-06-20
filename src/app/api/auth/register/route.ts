@@ -22,6 +22,14 @@ export async function POST(request: NextRequest) {
   }
 
   const hashedPassword = await bcrypt.hash(password, 12)
+  const requireVerification = process.env.REQUIRE_EMAIL_VERIFICATION !== 'false'
+
+  if (!requireVerification) {
+    await prisma.user.create({
+      data: { name, email, password: hashedPassword, emailVerified: new Date() },
+    })
+    return NextResponse.json({ success: true, skipVerification: true }, { status: 201 })
+  }
 
   const user = await prisma.user.create({
     data: { name, email, password: hashedPassword },
