@@ -182,6 +182,17 @@
 - Register page already handles non-OK JSON responses via the `data.error` path — no UI changes needed
 - `sendVerificationEmail` in `src/lib/email.ts` already throws on Resend error (fixed in prior commit)
 
+### 2026-06-20 — Auth Security Hardening (High → Low Findings)
+
+- Added `sanitizeCallbackUrl()` to sign-in page — rejects external/protocol-relative `callbackUrl` params, blocking open redirect (High)
+- Added server-side password minimum length (≥ 8 chars) to register, reset-password, and change-password routes (Medium)
+- Wrapped `request.json()` in `try/catch` in all auth API routes — returns clean `400` on malformed body (Medium)
+- Added email format validation (regex) and normalization (`trim().toLowerCase()`) in register, forgot-password, resend-verification, and reset-password routes (Medium / Low)
+- Fixed `resend-verification` to return `200` for already-verified emails instead of `409` — eliminates email presence enumeration (Medium)
+- Added `// TODO: rate limiting` comments to register, forgot-password, and change-password routes noting Upstash Ratelimit as the recommended path (Medium)
+- Removed user email from `console.error` in forgot-password route (Low)
+- Added `auth-auditor` agent at `.claude/agents/auth-auditor.md` and initial audit report at `docs/audit-results/AUTH_SECURITY_REVIEW.md`
+
 ### 2026-06-15 — Auth Phase 3: Custom Auth UI
 
 - Created `src/app/(auth)/sign-in/page.tsx` — custom sign-in page with email/password form, GitHub OAuth button, link to register, and inline error display
