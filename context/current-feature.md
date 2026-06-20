@@ -1,16 +1,26 @@
-# Current Feature
+# Current Feature: Email Verification on Register
 
 ## Status
 
-—
+In Progress
 
 ## Goals
 
-—
+- Send a verification email via Resend when a new user registers
+- Email contains a unique, time-limited verification link
+- Clicking the link marks the user's `emailVerified` field in the database
+- Users who have not verified their email cannot access the dashboard
+- Resend the verification email if requested (e.g. "resend verification" link on a holding page)
 
 ## Notes
 
-—
+- Use Resend for email delivery; `RESEND_API_KEY` is in `.env`
+- `emailVerified DateTime?` already exists on the `User` model (added for NextAuth)
+- NextAuth's `VerificationToken` model is already in the Prisma schema — use it to store tokens
+- Verification tokens should expire (24 hours is standard)
+- After clicking the link, redirect to `/sign-in` with a success message
+- Unverified users should see a "Check your email" page rather than an error
+- GitHub OAuth users are auto-verified (no email check needed for OAuth flow)
 
 ## History
 

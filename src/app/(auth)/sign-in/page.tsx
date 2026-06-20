@@ -20,6 +20,7 @@ function SignInForm() {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
   const urlError = searchParams.get('error')
+  const verified = searchParams.get('verified') === 'true'
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -72,6 +73,11 @@ function SignInForm() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">
+          {verified && (
+            <p className="rounded-md bg-emerald-500/10 px-3 py-2 text-sm text-emerald-400">
+              Email verified! You can now sign in.
+            </p>
+          )}
           {error && (
             <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
               {error}

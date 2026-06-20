@@ -14,6 +14,10 @@ export const proxy = auth(function proxy(req) {
     return NextResponse.redirect(signInUrl)
   }
 
+  if (isProtected && isLoggedIn && !req.auth?.user?.emailVerified) {
+    return NextResponse.redirect(new URL("/verify-email", req.nextUrl))
+  }
+
   return NextResponse.next()
 })
 
