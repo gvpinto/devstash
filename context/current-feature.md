@@ -1,21 +1,16 @@
-# Current Feature: Auth UI - Sign In, Register & Sign Out
+# Current Feature
 
 ## Status
 
-In Progress
+—
 
 ## Goals
 
-- Replace NextAuth default sign-in page with a custom `/sign-in` page (email/password + GitHub OAuth button + link to register)
-- Build a custom `/register` page (name, email, password, confirm password) that submits to `/api/auth/register` and redirects to sign-in on success
-- Update the sidebar bottom to show the authenticated user's avatar (GitHub image or initials fallback), display name, and a dropdown with a "Sign out" link and a "/profile" navigation on icon click
+—
 
 ## Notes
 
-- Avatar logic: use `user.image` if present (GitHub OAuth); otherwise generate initials from name (e.g. "Brad Traversy" → "BT")
-- Create a reusable `Avatar` component that handles both cases
-- NextAuth `pages` config must point `signIn` to `/sign-in` so default pages are bypassed
-- Both pages are public routes (not behind the middleware proxy)
+—
 
 ## History
 
@@ -136,3 +131,16 @@ In Progress
 - Created `src/app/api/auth/register/route.ts` — `POST /api/auth/register` validates all fields, rejects password mismatches and duplicate emails, hashes at 12 rounds, creates user in Neon
 - GitHub OAuth provider unaffected; split-config pattern preserved
 - `password String?` field and `bcryptjs` were already in place from the Seed Data phase
+
+### 2026-06-15 — Auth Phase 3: Custom Auth UI
+
+- Created `src/app/(auth)/sign-in/page.tsx` — custom sign-in page with email/password form, GitHub OAuth button, link to register, and inline error display
+- Created `src/app/(auth)/register/page.tsx` — register page with name/email/password/confirm fields, client-side mismatch validation, POSTs to `/api/auth/register`, redirects to `/sign-in` on success
+- Created `src/app/(auth)/layout.tsx` — centered auth layout shared by both pages
+- Created `src/components/ui/user-avatar.tsx` — reusable avatar: shows `user.image` if present (GitHub), otherwise renders initials (up to 2 chars from name)
+- Created `src/components/dashboard/user-dropdown.tsx` — client component with click-outside dropdown; "Profile" navigates to `/profile`, "Sign out" calls `signOut({ callbackUrl: '/sign-in' })`
+- Updated `src/auth.ts` — added `pages: { signIn: '/sign-in' }` to bypass NextAuth default pages
+- Updated `src/proxy.ts` — redirect unauthenticated users to `/sign-in` (was `/api/auth/signin`)
+- Updated `src/components/dashboard/sidebar.tsx` — replaced hardcoded demo user section with `UserDropdown` accepting `user` prop
+- Updated `src/components/dashboard/dashboard-shell.tsx` — accepts and forwards `user` prop to `Sidebar`
+- Updated `src/app/dashboard/layout.tsx` — fetches session via `auth()` in parallel with sidebar data; passes user to `DashboardShell`
