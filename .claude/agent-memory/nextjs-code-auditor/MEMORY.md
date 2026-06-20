@@ -1,0 +1,2 @@
+- [Project Stack](project_stack.md) — tech stack, structural conventions, key architectural decisions
+- [Audit Findings 2026-06-03](audit_findings_2026-06-03.md) — first full audit: recurring issues to re-check in future audits

@@ -15,10 +15,16 @@ function GithubIcon() {
 }
 import { Input } from '@/components/ui/input'
 
+function sanitizeCallbackUrl(url: string | null): string {
+  if (!url) return '/dashboard'
+  // Reject external URLs and protocol-relative URLs (//evil.com)
+  return url.startsWith('/') && !url.startsWith('//') ? url : '/dashboard'
+}
+
 function SignInForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
+  const callbackUrl = sanitizeCallbackUrl(searchParams.get('callbackUrl'))
   const urlError = searchParams.get('error')
   const verified = searchParams.get('verified') === 'true'
   const passwordReset = searchParams.get('passwordReset') === 'true'
