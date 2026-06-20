@@ -1,16 +1,21 @@
-# Current Feature
+# Current Feature: Item Listing — 3-Column Layout
 
 ## Status
 
-—
+In Progress
 
 ## Goals
 
-—
+- Change the item listing grid on `/items/[type]` from 2 columns (`md:grid-cols-2`) to 3 columns on larger viewports
+- Keep 1-column layout on mobile (unchanged)
+- Keep 2-column layout on medium screens (md)
+- Add 3-column layout on large screens (lg+)
+- No changes to card appearance or data fetching
 
 ## Notes
 
-—
+- Only `src/app/items/[type]/page.tsx` needs to change — the grid class update is a one-liner
+- Responsive breakpoints: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`
 
 ## History
 
