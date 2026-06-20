@@ -149,6 +149,13 @@
 - Updated `src/types/next-auth.d.ts` — added `emailVerified: Date | null` to `Session.user`
 - Added `scripts/delete-non-demo-users.ts` + `db:delete-non-demo` npm script — deletes all users and their content except `demo@devstash.io`
 
+### 2026-06-20 — Email Verification Toggle
+
+- Added `REQUIRE_EMAIL_VERIFICATION` env var (default `true`); set to `false` in `.env.local` for dev
+- Updated `POST /api/auth/register` — when `false`, creates user with `emailVerified: new Date()` immediately and returns `{ skipVerification: true }` with 201; full token+email flow runs only when `true`
+- Updated register page — on `skipVerification: true`, redirects to `/sign-in?verified=true` instead of `/verify-email`
+- Proxy unverified-user guard unaffected — works correctly in both modes since `emailVerified` is set when verification is skipped
+
 ### 2026-06-20 — Show Error When Verification Email Fails
 
 - Updated `POST /api/auth/register` — wrapped `generateVerificationToken` + `sendVerificationEmail` in try/catch; on failure, deletes the created user and returns `{ error: "Failed to send verification email. Please try again." }` with status 500
