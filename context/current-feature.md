@@ -1,26 +1,16 @@
-# Current Feature: Email Verification on Register
+# Current Feature
 
 ## Status
 
-In Progress
+—
 
 ## Goals
 
-- Send a verification email via Resend when a new user registers
-- Email contains a unique, time-limited verification link
-- Clicking the link marks the user's `emailVerified` field in the database
-- Users who have not verified their email cannot access the dashboard
-- Resend the verification email if requested (e.g. "resend verification" link on a holding page)
+—
 
 ## Notes
 
-- Use Resend for email delivery; `RESEND_API_KEY` is in `.env`
-- `emailVerified DateTime?` already exists on the `User` model (added for NextAuth)
-- NextAuth's `VerificationToken` model is already in the Prisma schema — use it to store tokens
-- Verification tokens should expire (24 hours is standard)
-- After clicking the link, redirect to `/sign-in` with a success message
-- Unverified users should see a "Check your email" page rather than an error
-- GitHub OAuth users are auto-verified (no email check needed for OAuth flow)
+—
 
 ## History
 
@@ -141,6 +131,23 @@ In Progress
 - Created `src/app/api/auth/register/route.ts` — `POST /api/auth/register` validates all fields, rejects password mismatches and duplicate emails, hashes at 12 rounds, creates user in Neon
 - GitHub OAuth provider unaffected; split-config pattern preserved
 - `password String?` field and `bcryptjs` were already in place from the Seed Data phase
+
+### 2026-06-19 — Auth Phase 4: Email Verification on Register
+
+- Installed `resend` package; `RESEND_API_KEY` read from `.env`
+- Created `src/lib/tokens.ts` — `generateVerificationToken()` (32-byte hex, 24h expiry), `verifyToken()`, `deleteVerificationToken()` using the existing `VerificationToken` Prisma model
+- Created `src/lib/email.ts` — Resend client + `sendVerificationEmail()` with HTML email template
+- Updated `POST /api/auth/register` — removed `emailVerified: new Date()`, now generates token and sends verification email
+- Created `GET /api/auth/verify-email` — validates token, sets `emailVerified` in DB, deletes token, redirects to `/sign-in?verified=true`
+- Created `POST /api/auth/resend-verification` — regenerates token and resends email; returns 200 for unknown emails to avoid enumeration
+- Created `src/app/(auth)/verify-email/page.tsx` — "Check your email" holding page with resend form; shows inline error on expired/invalid token params
+- Updated register page to redirect to `/verify-email?email=...` instead of `/sign-in` after registration
+- Updated sign-in page to show a success banner on `?verified=true`
+- Updated `src/auth.config.ts` — added edge-safe `callbacks.session` that maps `token.emailVerified` → `session.user.emailVerified` (needed by the proxy)
+- Updated `src/auth.ts` — `authorize` returns `emailVerified`; full `callbacks` (jwt + session) placed after `...authConfig` spread so they correctly override; `emailVerified` carried through JWT into session
+- Updated `src/proxy.ts` — signed-in but unverified users hitting `/dashboard` are redirected to `/verify-email`
+- Updated `src/types/next-auth.d.ts` — added `emailVerified: Date | null` to `Session.user`
+- Added `scripts/delete-non-demo-users.ts` + `db:delete-non-demo` npm script — deletes all users and their content except `demo@devstash.io`
 
 ### 2026-06-15 — Auth Phase 3: Custom Auth UI
 
