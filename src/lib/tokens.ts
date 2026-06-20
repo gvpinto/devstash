@@ -2,6 +2,7 @@ import { randomBytes } from 'crypto'
 import { prisma } from '@/lib/prisma'
 
 const EXPIRY_HOURS = 24
+const RESET_EXPIRY_HOURS = 1
 
 export async function generateVerificationToken(email: string): Promise<string> {
   const token = randomBytes(32).toString('hex')
@@ -27,4 +28,33 @@ export async function verifyToken(
 
 export async function deleteVerificationToken(email: string, token: string) {
   await prisma.verificationToken.deleteMany({ where: { identifier: email, token } })
+}
+
+const resetIdentifier = (email: string) => `reset:${email}`
+
+export async function generatePasswordResetToken(email: string): Promise<string> {
+  const token = randomBytes(32).toString('hex')
+  const expires = new Date(Date.now() + RESET_EXPIRY_HOURS * 60 * 60 * 1000)
+  const identifier = resetIdentifier(email)
+
+  await prisma.verificationToken.deleteMany({ where: { identifier } })
+  await prisma.verificationToken.create({ data: { identifier, token, expires } })
+
+  return token
+}
+
+export async function verifyPasswordResetToken(
+  email: string,
+  token: string,
+): Promise<{ valid: true } | { valid: false; reason: 'invalid' | 'expired' }> {
+  const record = await prisma.verificationToken.findUnique({
+    where: { identifier_token: { identifier: resetIdentifier(email), token } },
+  })
+  if (!record) return { valid: false, reason: 'invalid' }
+  if (record.expires < new Date()) return { valid: false, reason: 'expired' }
+  return { valid: true }
+}
+
+export async function deletePasswordResetToken(email: string, token: string) {
+  await prisma.verificationToken.deleteMany({ where: { identifier: resetIdentifier(email), token } })
 }
