@@ -37,7 +37,7 @@ export default function RegisterPage() {
         setError(data.error ?? 'Registration failed.')
         return
       }
-      router.push('/sign-in')
+      router.push(`/verify-email?email=${encodeURIComponent(email)}`)
     } catch {
       setError('Something went wrong. Please try again.')
     } finally {

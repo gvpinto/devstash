@@ -10,16 +10,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   pages: { signIn: "/sign-in" },
-  callbacks: {
-    jwt({ token, user }) {
-      if (user) token.id = user.id
-      return token
-    },
-    session({ session, token }) {
-      session.user.id = token.id as string
-      return session
-    },
-  },
   ...authConfig,
   providers: [
     GitHub,
@@ -32,13 +22,28 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         if (!credentials?.email || !credentials?.password) return null
         const user = await prisma.user.findUnique({
           where: { email: credentials.email as string },
-          select: { id: true, name: true, email: true, image: true, password: true },
+          select: { id: true, name: true, email: true, image: true, password: true, emailVerified: true },
         })
         if (!user?.password) return null
         const valid = await bcrypt.compare(credentials.password as string, user.password)
         if (!valid) return null
-        return { id: user.id, name: user.name, email: user.email, image: user.image }
+        return { id: user.id, name: user.name, email: user.email, image: user.image, emailVerified: user.emailVerified }
       },
     }),
   ],
+  // Must come after ...authConfig spread to override authConfig.callbacks
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+        token.emailVerified = (user as { emailVerified?: Date | null }).emailVerified ?? null
+      }
+      return token
+    },
+    session({ session, token }) {
+      session.user.id = token.id as string
+      session.user.emailVerified = token.emailVerified as Date | null
+      return session
+    },
+  },
 })

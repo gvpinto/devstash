@@ -13,4 +13,12 @@ export default {
       authorize: () => null,
     }),
   ],
+  callbacks: {
+    // Edge-safe: maps custom JWT fields into session.user for the proxy/middleware.
+    // The full auth.ts overrides this with a superset that also adds user.id.
+    session({ session, token }) {
+      session.user.emailVerified = (token.emailVerified as Date | null) ?? null
+      return session
+    },
+  },
 } satisfies NextAuthConfig
