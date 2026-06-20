@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { signInWithGitHub } from '@/actions/auth'
 
 function GithubIcon() {
   return (
@@ -67,15 +68,12 @@ function SignInForm() {
       </div>
 
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm space-y-4">
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full"
-          onClick={() => signIn('github', { callbackUrl })}
-        >
-          <GithubIcon />
-          Sign in with GitHub
-        </Button>
+        <form action={signInWithGitHub}>
+          <Button type="submit" variant="outline" className="w-full">
+            <GithubIcon />
+            Sign in with GitHub
+          </Button>
+        </form>
 
         <div className="flex items-center gap-3">
           <div className="h-px flex-1 bg-border" />
