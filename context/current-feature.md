@@ -149,6 +149,12 @@
 - Updated `src/types/next-auth.d.ts` — added `emailVerified: Date | null` to `Session.user`
 - Added `scripts/delete-non-demo-users.ts` + `db:delete-non-demo` npm script — deletes all users and their content except `demo@devstash.io`
 
+### 2026-06-20 — Show Error When Verification Email Fails
+
+- Updated `POST /api/auth/register` — wrapped `generateVerificationToken` + `sendVerificationEmail` in try/catch; on failure, deletes the created user and returns `{ error: "Failed to send verification email. Please try again." }` with status 500
+- Register page already handles non-OK JSON responses via the `data.error` path — no UI changes needed
+- `sendVerificationEmail` in `src/lib/email.ts` already throws on Resend error (fixed in prior commit)
+
 ### 2026-06-15 — Auth Phase 3: Custom Auth UI
 
 - Created `src/app/(auth)/sign-in/page.tsx` — custom sign-in page with email/password form, GitHub OAuth button, link to register, and inline error display
