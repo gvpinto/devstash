@@ -1,21 +1,16 @@
-# Current Feature: Item Listing — 3-Column Layout
+# Current Feature
 
 ## Status
 
-In Progress
+—
 
 ## Goals
 
-- Change the item listing grid on `/items/[type]` from 2 columns (`md:grid-cols-2`) to 3 columns on larger viewports
-- Keep 1-column layout on mobile (unchanged)
-- Keep 2-column layout on medium screens (md)
-- Add 3-column layout on large screens (lg+)
-- No changes to card appearance or data fetching
+—
 
 ## Notes
 
-- Only `src/app/items/[type]/page.tsx` needs to change — the grid class update is a one-liner
-- Responsive breakpoints: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`
+—
 
 ## History
 
@@ -226,6 +221,20 @@ In Progress
 - Added `getItemsByType(slug)` to `src/lib/db/items.ts` — looks up `ItemType` by name (case-insensitive match on slug), returns `null` when not found, fetches all items of that type ordered newest first
 - Created `src/app/items/[type]/page.tsx` — async server component; resolves slug → `notFound()` for unknown types; renders type icon header with name and item count; 1-column (mobile) / 2-column (md+) grid of `ItemCard` components
 - Updated `src/components/dashboard/item-card.tsx` — added `style={{ borderLeftColor: typeColor, borderLeftWidth: '3px' }}` to give each card a colored left border matching its item type
+
+### 2026-06-20 — Item Listing — 3-Column Layout
+
+- Updated `src/app/items/[type]/page.tsx` — added `lg:grid-cols-3` to the item grid; responsive breakpoints are now `grid-cols-1` (mobile) → `md:grid-cols-2` (tablet) → `lg:grid-cols-3` (desktop 1024px+)
+
+### 2026-06-20 — Vitest Unit Testing Setup
+
+- Installed `vitest`, `vite-tsconfig-paths`, `@vitest/coverage-v8` as devDependencies
+- Created `vitest.config.ts` — Node environment, `@/*` path alias via `vite-tsconfig-paths`, coverage scoped to `src/lib/` and `src/actions/`
+- Created `tests/lib/utils.test.ts` — 5 tests for `cn()` (pure function)
+- Created `tests/lib/rate-limit.test.ts` — 7 tests for `getClientIP`, `retryAfterSeconds`, and fail-open `rateLimit`
+- Created `tests/lib/tokens.test.ts` — 4 tests for `verifyToken` and `verifyPasswordResetToken` with Prisma mocked via `vi.mock`
+- Added `test`, `test:watch`, `test:coverage` scripts to `package.json`
+- Updated `context/coding-standards.md` with Testing section; updated `context/ai-interaction.md` workflow step 4
 
 ### 2026-06-20 — Rate Limiting for Auth Routes
 
