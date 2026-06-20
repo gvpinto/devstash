@@ -149,6 +149,16 @@
 - Updated `src/types/next-auth.d.ts` — added `emailVerified: Date | null` to `Session.user`
 - Added `scripts/delete-non-demo-users.ts` + `db:delete-non-demo` npm script — deletes all users and their content except `demo@devstash.io`
 
+### 2026-06-20 — Forgot Password
+
+- Added `generatePasswordResetToken`, `verifyPasswordResetToken`, `deletePasswordResetToken` to `src/lib/tokens.ts` — uses `reset:${email}` identifier prefix to avoid collisions with email verification tokens; 1-hour expiry
+- Added `sendPasswordResetEmail` to `src/lib/email.ts` — same Resend pattern as verification email
+- Created `POST /api/auth/forgot-password` — generates reset token and sends email if user exists; always returns 200 to avoid enumeration
+- Created `POST /api/auth/reset-password` — validates token, hashes and saves new password, deletes token
+- Created `src/app/(auth)/forgot-password/page.tsx` — email form; shows confirmation message after submit regardless of outcome
+- Created `src/app/(auth)/reset-password/page.tsx` — reads `token` + `email` from URL params; new password + confirm form; invalid/missing params show inline error with link to request new reset
+- Updated sign-in page — added "Forgot password?" link next to password label; added `?passwordReset=true` success banner
+
 ### 2026-06-20 — Email Verification Toggle
 
 - Added `REQUIRE_EMAIL_VERIFICATION` env var (default `true`); set to `false` in `.env.local` for dev
