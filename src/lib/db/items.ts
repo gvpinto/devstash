@@ -146,3 +146,29 @@ export async function getRecentItems(limit = 10): Promise<ItemSummary[]> {
   })
   return items.map(toSummary)
 }
+
+export interface ItemTypeHeader {
+  id: string
+  name: string
+  icon: string
+  color: string
+}
+
+export async function getItemsByType(
+  slug: string
+): Promise<{ itemType: ItemTypeHeader | null; items: ItemSummary[] }> {
+  const itemType = await prisma.itemType.findFirst({
+    where: { name: { equals: slug, mode: 'insensitive' } },
+    select: { id: true, name: true, icon: true, color: true },
+  })
+
+  if (!itemType) return { itemType: null, items: [] }
+
+  const items = await prisma.item.findMany({
+    where: { itemTypeId: itemType.id },
+    select: itemSelect,
+    orderBy: { createdAt: 'desc' },
+  })
+
+  return { itemType, items: items.map(toSummary) }
+}

@@ -1,16 +1,25 @@
-# Current Feature
+# Current Feature: Items List View
 
 ## Status
 
-—
+In Progress
 
 ## Goals
 
-—
+- Create dynamic route `/items/[type]` (e.g., `/items/snippets`, `/items/notes`)
+- Fetch and display items filtered by the given type slug
+- Render a responsive grid of `ItemCard` components
+- Two columns on medium screens and up
+- Each card has a left border colored by item type
+- Follow existing codebase patterns
 
 ## Notes
 
-—
+- Route: `src/app/items/[type]/page.tsx`
+- Type slug maps to an `ItemType` name in the database (e.g., "snippets" → Snippet)
+- Sidebar already links to `/items/TYPE` — these links need to resolve
+- Reuse `ItemCard` component from `src/components/dashboard/item-card.tsx`
+- Fetch data server-side using Prisma, following the pattern in `src/lib/db/items.ts`
 
 ## History
 

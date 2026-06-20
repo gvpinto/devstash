@@ -32,7 +32,10 @@ export function ItemCard({
   })
 
   return (
-    <div className="group flex items-start gap-3 rounded-lg border border-border bg-card px-4 py-3 hover:border-border/80 transition-colors cursor-pointer">
+    <div
+      className="group flex items-start gap-3 rounded-lg border border-border bg-card px-4 py-3 hover:border-border/80 transition-colors cursor-pointer"
+      style={{ borderLeftColor: typeColor, borderLeftWidth: '3px' }}
+    >
       <div
         className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-md"
         style={{ backgroundColor: color + '20' }}
