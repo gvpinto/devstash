@@ -1,16 +1,19 @@
-# Current Feature
+# Current Feature: Items Layout — Preserve Sidebar
 
 ## Status
 
-—
+In Progress
 
 ## Goals
 
-—
+- The sidebar/navigation panel must remain visible when navigating to `/items/[type]`
+- Currently the sidebar is replaced because `/items/` has no layout wrapping it in `DashboardShell`
 
 ## Notes
 
-—
+- Root cause: `src/app/dashboard/layout.tsx` uses `DashboardShell` but that layout only applies to `/dashboard/*` routes. `/items/[type]` has no layout at all.
+- Fix: create `src/app/items/layout.tsx` that mirrors `src/app/dashboard/layout.tsx` — fetches sidebar data + session, renders `DashboardShell` wrapping `{children}`
+- No changes needed to `DashboardShell`, `Sidebar`, or any existing components
 
 ## History
 
