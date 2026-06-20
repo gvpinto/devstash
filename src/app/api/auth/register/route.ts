@@ -23,12 +23,20 @@ export async function POST(request: NextRequest) {
 
   const hashedPassword = await bcrypt.hash(password, 12)
 
-  await prisma.user.create({
+  const user = await prisma.user.create({
     data: { name, email, password: hashedPassword },
   })
 
-  const token = await generateVerificationToken(email)
-  await sendVerificationEmail(email, token)
+  try {
+    const token = await generateVerificationToken(email)
+    await sendVerificationEmail(email, token)
+  } catch {
+    await prisma.user.delete({ where: { id: user.id } })
+    return NextResponse.json(
+      { error: 'Failed to send verification email. Please try again.' },
+      { status: 500 }
+    )
+  }
 
   return NextResponse.json({ success: true }, { status: 201 })
 }
