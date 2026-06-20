@@ -1,19 +1,16 @@
-# Current Feature: Items Layout — Preserve Sidebar
+# Current Feature
 
 ## Status
 
-In Progress
+—
 
 ## Goals
 
-- The sidebar/navigation panel must remain visible when navigating to `/items/[type]`
-- Currently the sidebar is replaced because `/items/` has no layout wrapping it in `DashboardShell`
+—
 
 ## Notes
 
-- Root cause: `src/app/dashboard/layout.tsx` uses `DashboardShell` but that layout only applies to `/dashboard/*` routes. `/items/[type]` has no layout at all.
-- Fix: create `src/app/items/layout.tsx` that mirrors `src/app/dashboard/layout.tsx` — fetches sidebar data + session, renders `DashboardShell` wrapping `{children}`
-- No changes needed to `DashboardShell`, `Sidebar`, or any existing components
+—
 
 ## History
 
@@ -213,6 +210,11 @@ In Progress
 
 - Created `src/actions/auth.ts` — `signInWithGitHub` Server Action calling `signIn("github", { redirectTo: "/dashboard" })` from `@/auth` (NextAuth v5 server-side pattern)
 - Updated `src/app/(auth)/sign-in/page.tsx` — replaced GitHub `<Button onClick={() => signIn(...)}>` with `<form action={signInWithGitHub}>` submit button; redirect is now handled server-side, fixing the two-click bug where the first click authenticated but client-side redirect failed
+
+### 2026-06-20 — Items Layout — Preserve Sidebar
+
+- Created `src/app/items/layout.tsx` — mirrors `src/app/dashboard/layout.tsx`; fetches sidebar data + session in parallel, wraps `{children}` in `DashboardShell` so the sidebar persists on all `/items/*` routes
+- Updated `src/proxy.ts` — added `/items` to protected routes so unauthenticated users are redirected to `/sign-in`
 
 ### 2026-06-20 — Items List View
 
