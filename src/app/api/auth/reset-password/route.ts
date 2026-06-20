@@ -4,11 +4,22 @@ import { prisma } from '@/lib/prisma'
 import { verifyPasswordResetToken, deletePasswordResetToken } from '@/lib/tokens'
 
 export async function POST(request: NextRequest) {
-  const body = await request.json()
-  const { email, token, password, confirmPassword } = body
+  let body: unknown
+  try {
+    body = await request.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
+  }
+  const { email: rawEmail, token, password, confirmPassword } = body as Record<string, string>
 
-  if (!email || !token || !password || !confirmPassword) {
+  if (!rawEmail || !token || !password || !confirmPassword) {
     return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
+  }
+
+  const email = rawEmail.trim().toLowerCase()
+
+  if (password.length < 8) {
+    return NextResponse.json({ error: 'Password must be at least 8 characters' }, { status: 400 })
   }
 
   if (password !== confirmPassword) {

@@ -4,12 +4,19 @@ import { generateVerificationToken } from "@/lib/tokens"
 import { sendVerificationEmail } from "@/lib/email"
 
 export async function POST(request: NextRequest) {
-  const body = await request.json()
-  const { email } = body
+  let body: unknown
+  try {
+    body = await request.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
+  }
+  const { email: rawEmail } = body as Record<string, string>
 
-  if (!email) {
+  if (!rawEmail) {
     return NextResponse.json({ error: "Email is required" }, { status: 400 })
   }
+
+  const email = rawEmail.trim().toLowerCase()
 
   const user = await prisma.user.findUnique({
     where: { email },
@@ -22,7 +29,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (user.emailVerified) {
-    return NextResponse.json({ error: "Email is already verified" }, { status: 409 })
+    return NextResponse.json({ success: true })
   }
 
   const token = await generateVerificationToken(email)

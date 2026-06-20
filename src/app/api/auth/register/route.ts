@@ -4,12 +4,28 @@ import { prisma } from "@/lib/prisma"
 import { generateVerificationToken } from "@/lib/tokens"
 import { sendVerificationEmail } from "@/lib/email"
 
+// TODO: Add rate limiting (e.g. Upstash Ratelimit) — currently open to mass account creation per IP
 export async function POST(request: NextRequest) {
-  const body = await request.json()
-  const { name, email, password, confirmPassword } = body
+  let body: unknown
+  try {
+    body = await request.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
+  }
+  const { name, email: rawEmail, password, confirmPassword } = body as Record<string, string>
 
-  if (!name || !email || !password || !confirmPassword) {
+  if (!name || !rawEmail || !password || !confirmPassword) {
     return NextResponse.json({ error: "All fields are required" }, { status: 400 })
+  }
+
+  const email = rawEmail.trim().toLowerCase()
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return NextResponse.json({ error: 'Invalid email address' }, { status: 400 })
+  }
+
+  if (password.length < 8) {
+    return NextResponse.json({ error: 'Password must be at least 8 characters' }, { status: 400 })
   }
 
   if (password !== confirmPassword) {

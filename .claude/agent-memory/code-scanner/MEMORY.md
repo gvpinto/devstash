@@ -1,0 +1,1 @@
+- [Project Stack](project_stack.md) — tech stack, structural conventions, key architectural decisions
