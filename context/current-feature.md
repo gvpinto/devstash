@@ -149,6 +149,16 @@
 - Updated `src/types/next-auth.d.ts` — added `emailVerified: Date | null` to `Session.user`
 - Added `scripts/delete-non-demo-users.ts` + `db:delete-non-demo` npm script — deletes all users and their content except `demo@devstash.io`
 
+### 2026-06-20 — Profile Page
+
+- Created `src/lib/db/profile.ts` — `getProfileData(userId)` fetches user info, total items, per-type item counts (grouped by itemTypeId), collection count, and whether the user has a password set (email user detection)
+- Created `POST /api/auth/change-password` — verifies current password via bcrypt, hashes and saves new password; returns 400 on wrong current password or OAuth-only account
+- Created `DELETE /api/auth/account` — deletes user by session id; Prisma cascade deletes handle all related data
+- Created `src/app/profile/page.tsx` — async server component; sections: user info (avatar, name, email, join date), usage stats (totals + per-type breakdown with type icons), change password (email users only), danger zone (delete account)
+- Created `src/app/profile/change-password-form.tsx` — client form with current/new/confirm fields; inline success and error feedback
+- Created `src/app/profile/delete-account-section.tsx` — client component; "Delete account" button expands to confirmation panel with cancel; on confirm calls DELETE route then `signOut`
+- Updated `src/proxy.ts` — `/profile` added to protected routes (redirects unauthenticated users to `/sign-in`)
+
 ### 2026-06-20 — Forgot Password
 
 - Added `generatePasswordResetToken`, `verifyPasswordResetToken`, `deletePasswordResetToken` to `src/lib/tokens.ts` — uses `reset:${email}` identifier prefix to avoid collisions with email verification tokens; 1-hour expiry
