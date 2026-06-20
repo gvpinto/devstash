@@ -94,4 +94,13 @@ Example v4 configuration:
 - No commented-out code unless specified
 - No unused imports or variables
 - Keep functions under 50 lines when possible
-```
+
+## Testing
+
+- **Runner:** Vitest (`npm test` / `npm run test:watch` / `npm run test:coverage`)
+- **Scope:** Server actions (`src/actions/`) and utilities (`src/lib/`) only — no component tests
+- **Location:** `tests/lib/` and `tests/actions/` mirroring the source tree
+- **Mocking:** Use `vi.mock('@/lib/prisma')` to isolate DB calls; use `vi.mock('@/lib/email')` to isolate Resend calls
+- **What to test:** Pure functions fully; functions with external dependencies via mock
+- **What to skip:** Next.js layouts/pages, React components, Prisma queries themselves
+- Run `npm test` before every commit — all tests must pass
