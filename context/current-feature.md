@@ -1,36 +1,16 @@
-# Current Feature: Fix GitHub OAuth Redirect Issue
+# Current Feature
 
 ## Status
 
-In Progress
+—
 
 ## Goals
 
-- Fix two-click GitHub sign-in bug where first click authenticates but redirect to `/dashboard` fails
-- Switch GitHub OAuth button from client-side `signIn` (next-auth/react) to a server-side Server Action
-- Create `src/actions/auth.ts` with a `signInWithGitHub` server action
-- Replace the GitHub `<Button onClick>` in the sign-in form with a `<form action={signInWithGitHub}>` submit button
+—
 
 ## Notes
 
-### Root Cause
-
-Using client-side `signIn` from `next-auth/react` has unreliable redirect behavior. The session is created on the first click but the client-side redirect to `/dashboard` fails, so the user lands back on `/sign-in` and must click again.
-
-### Solution
-
-Switch to server-side `signIn` from `@/auth` via a Server Action — the recommended NextAuth v5 pattern. Server-side redirect avoids client-side timing issues.
-
-### Changes Required
-
-1. **Create `src/actions/auth.ts`** — export `signInWithGitHub` server action calling `signIn("github", { redirectTo: "/dashboard" })`
-2. **Update sign-in page/form** — replace GitHub `<Button onClick>` with `<form action={signInWithGitHub}>` submit button; remove `isGitHubLoading` state and `handleGitHubSignIn` function
-
-### Key Details
-
-- Use `redirectTo` (NextAuth v5), not `callbackUrl` (v4)
-- No SessionProvider needed
-- Credentials login (`redirect: false`) is unaffected and stays as-is
+—
 
 ## History
 
@@ -225,6 +205,11 @@ Switch to server-side `signIn` from `@/auth` via a Server Action — the recomme
 - Updated `src/components/dashboard/sidebar.tsx` — replaced hardcoded demo user section with `UserDropdown` accepting `user` prop
 - Updated `src/components/dashboard/dashboard-shell.tsx` — accepts and forwards `user` prop to `Sidebar`
 - Updated `src/app/dashboard/layout.tsx` — fetches session via `auth()` in parallel with sidebar data; passes user to `DashboardShell`
+
+### 2026-06-20 — Fix GitHub OAuth Two-Click Redirect
+
+- Created `src/actions/auth.ts` — `signInWithGitHub` Server Action calling `signIn("github", { redirectTo: "/dashboard" })` from `@/auth` (NextAuth v5 server-side pattern)
+- Updated `src/app/(auth)/sign-in/page.tsx` — replaced GitHub `<Button onClick={() => signIn(...)}>` with `<form action={signInWithGitHub}>` submit button; redirect is now handled server-side, fixing the two-click bug where the first click authenticated but client-side redirect failed
 
 ### 2026-06-20 — Rate Limiting for Auth Routes
 
