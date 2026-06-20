@@ -2,8 +2,19 @@ import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { verifyPasswordResetToken, deletePasswordResetToken } from '@/lib/tokens'
+import { rateLimit, getClientIP, retryAfterSeconds } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIP(request)
+  const { success, reset } = await rateLimit(`reset-password:${ip}`, 5, '15 m')
+  if (!success) {
+    const retryAfter = retryAfterSeconds(reset)
+    return NextResponse.json(
+      { error: `Too many attempts. Please try again in ${Math.ceil(retryAfter / 60)} minutes.` },
+      { status: 429, headers: { 'Retry-After': String(retryAfter) } }
+    )
+  }
+
   let body: unknown
   try {
     body = await request.json()

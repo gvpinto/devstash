@@ -2,8 +2,19 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { generatePasswordResetToken } from '@/lib/tokens'
 import { sendPasswordResetEmail } from '@/lib/email'
+import { rateLimit, getClientIP, retryAfterSeconds } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIP(request)
+  const { success, reset } = await rateLimit(`forgot-password:${ip}`, 3, '1 h')
+  if (!success) {
+    const retryAfter = retryAfterSeconds(reset)
+    return NextResponse.json(
+      { error: `Too many attempts. Please try again in ${Math.ceil(retryAfter / 60)} minutes.` },
+      { status: 429, headers: { 'Retry-After': String(retryAfter) } }
+    )
+  }
+
   let body: unknown
   try {
     body = await request.json()
@@ -29,7 +40,6 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // TODO: Add rate limiting (e.g. Upstash Ratelimit) — currently open to email flooding per IP
   // Always return 200 to avoid email enumeration
   return NextResponse.json({ success: true })
 }
