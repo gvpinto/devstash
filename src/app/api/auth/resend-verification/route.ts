@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { generateVerificationToken } from "@/lib/tokens"
 import { sendVerificationEmail } from "@/lib/email"
+import { rateLimit, getClientIP, retryAfterSeconds } from "@/lib/rate-limit"
 
 export async function POST(request: NextRequest) {
   let body: unknown
@@ -17,6 +18,16 @@ export async function POST(request: NextRequest) {
   }
 
   const email = rawEmail.trim().toLowerCase()
+
+  const ip = getClientIP(request)
+  const { success, reset } = await rateLimit(`resend-verification:${ip}:${email}`, 3, '15 m')
+  if (!success) {
+    const retryAfter = retryAfterSeconds(reset)
+    return NextResponse.json(
+      { error: `Too many attempts. Please try again in ${Math.ceil(retryAfter / 60)} minutes.` },
+      { status: 429, headers: { 'Retry-After': String(retryAfter) } }
+    )
+  }
 
   const user = await prisma.user.findUnique({
     where: { email },

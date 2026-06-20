@@ -40,6 +40,10 @@ function SignInForm() {
     setLoading(true)
     try {
       const result = await signIn('credentials', { email, password, redirect: false })
+      if (result?.code === 'too_many_attempts') {
+        setError('Too many sign-in attempts. Please try again in 15 minutes.')
+        return
+      }
       if (result?.error) {
         setError('Invalid email or password.')
         return
