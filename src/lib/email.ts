@@ -6,7 +6,7 @@ export async function sendVerificationEmail(email: string, token: string) {
   const baseUrl = process.env.NEXTAUTH_URL ?? 'http://localhost:3000'
   const verifyUrl = `${baseUrl}/api/auth/verify-email?token=${token}&email=${encodeURIComponent(email)}`
 
-  await resend.emails.send({
+  const { error } = await resend.emails.send({
     from: 'DevStash <onboarding@resend.dev>',
     to: email,
     subject: 'Verify your email address',
@@ -28,4 +28,9 @@ export async function sendVerificationEmail(email: string, token: string) {
       </div>
     `,
   })
+
+  if (error) {
+    console.error('[Resend] Failed to send verification email:', error)
+    throw new Error(error.message)
+  }
 }
