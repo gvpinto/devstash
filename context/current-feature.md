@@ -1,25 +1,16 @@
-# Current Feature: Items List View
+# Current Feature
 
 ## Status
 
-In Progress
+—
 
 ## Goals
 
-- Create dynamic route `/items/[type]` (e.g., `/items/snippets`, `/items/notes`)
-- Fetch and display items filtered by the given type slug
-- Render a responsive grid of `ItemCard` components
-- Two columns on medium screens and up
-- Each card has a left border colored by item type
-- Follow existing codebase patterns
+—
 
 ## Notes
 
-- Route: `src/app/items/[type]/page.tsx`
-- Type slug maps to an `ItemType` name in the database (e.g., "snippets" → Snippet)
-- Sidebar already links to `/items/TYPE` — these links need to resolve
-- Reuse `ItemCard` component from `src/components/dashboard/item-card.tsx`
-- Fetch data server-side using Prisma, following the pattern in `src/lib/db/items.ts`
+—
 
 ## History
 
@@ -219,6 +210,12 @@ In Progress
 
 - Created `src/actions/auth.ts` — `signInWithGitHub` Server Action calling `signIn("github", { redirectTo: "/dashboard" })` from `@/auth` (NextAuth v5 server-side pattern)
 - Updated `src/app/(auth)/sign-in/page.tsx` — replaced GitHub `<Button onClick={() => signIn(...)}>` with `<form action={signInWithGitHub}>` submit button; redirect is now handled server-side, fixing the two-click bug where the first click authenticated but client-side redirect failed
+
+### 2026-06-20 — Items List View
+
+- Added `getItemsByType(slug)` to `src/lib/db/items.ts` — looks up `ItemType` by name (case-insensitive match on slug), returns `null` when not found, fetches all items of that type ordered newest first
+- Created `src/app/items/[type]/page.tsx` — async server component; resolves slug → `notFound()` for unknown types; renders type icon header with name and item count; 1-column (mobile) / 2-column (md+) grid of `ItemCard` components
+- Updated `src/components/dashboard/item-card.tsx` — added `style={{ borderLeftColor: typeColor, borderLeftWidth: '3px' }}` to give each card a colored left border matching its item type
 
 ### 2026-06-20 — Rate Limiting for Auth Routes
 
