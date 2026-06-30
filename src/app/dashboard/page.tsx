@@ -5,6 +5,7 @@ import { getPinnedItems, getRecentItems } from '@/lib/db/items'
 import { StatsCards } from '@/components/dashboard/stats-cards'
 import { CollectionCard } from '@/components/dashboard/collection-card'
 import { ItemCard } from '@/components/dashboard/item-card'
+import { ItemDrawerProvider } from '@/components/dashboard/item-drawer-provider'
 
 export default async function DashboardPage() {
   const [collections, stats, pinnedItems, recentItems] = await Promise.all([
@@ -15,6 +16,7 @@ export default async function DashboardPage() {
   ])
 
   return (
+    <ItemDrawerProvider>
     <div className="space-y-8 max-w-5xl">
       {/* Page heading */}
       <div>
@@ -69,6 +71,7 @@ export default async function DashboardPage() {
             {pinnedItems.map((item) => (
               <ItemCard
                 key={item.id}
+                id={item.id}
                 title={item.title}
                 description={item.description}
                 typeIcon={item.typeIcon}
@@ -99,6 +102,7 @@ export default async function DashboardPage() {
           {recentItems.map((item) => (
             <ItemCard
               key={item.id}
+              id={item.id}
               title={item.title}
               description={item.description}
               typeIcon={item.typeIcon}
@@ -113,5 +117,6 @@ export default async function DashboardPage() {
         </div>
       </section>
     </div>
+    </ItemDrawerProvider>
   )
 }
