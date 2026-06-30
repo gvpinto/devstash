@@ -1,25 +1,16 @@
-# Current Feature: Item Drawer
+# Current Feature
 
 ## Status
 
-In Progress
+—
 
 ## Goals
 
-- Clicking an `ItemCard` opens a right-side `Sheet` drawer with that item's full data
-- Drawer works on both dashboard and `/items/[type]` pages
-- Full item detail fetched on click via `GET /api/items/[id]` (auth-checked); card data stays server-rendered
-- Drawer shows skeleton while loading
-- Action bar with: Favorite (star, yellow when active), Pin, Copy, Edit (pencil), Delete (trash, right-aligned)
-- Client wrapper component manages drawer open/close state (pages remain server components)
-- No page navigation — in-place, snappy feel
+—
 
 ## Notes
 
-- Use shadcn `Sheet` component opening from the right
-- Query function lives in `src/lib/db/items.ts`; API route calls it with session auth check
-- Content editor and item-type-specific fields are deferred — this feature is the detail display only
-- Visual reference: `context/screenshots/dashboard-ui-drawer.png`
+—
 
 ## History
 
@@ -256,3 +247,14 @@ In Progress
 - Added rate limiting to credentials login in `src/auth.ts` — 5 attempts / 15m by IP+email; throws `TooManyAttemptsError` (extends `CredentialsSignin`) on limit breach
 - Updated `src/app/(auth)/sign-in/page.tsx` — handles `too_many_attempts` error code with inline "try again in 15 minutes" message
 - Updated `src/app/(auth)/forgot-password/page.tsx` — handles 429 response with inline error from API
+
+### 2026-06-30 — Item Drawer
+
+- Installed shadcn `Sheet` component (`src/components/ui/sheet.tsx`)
+- Added `getItemById(id, userId)` to `src/lib/db/items.ts` — userId-scoped Prisma query fetching full item detail (content, url, language, tags, collections, type, dates)
+- Created `GET /api/items/[id]` — session auth check via `auth()`, calls `getItemById`, returns 401 if unauthenticated or 404 if item not found/wrong user
+- Created `src/components/dashboard/item-drawer.tsx` — client Sheet component; fetches item on open via `useEffect`; shows loading skeleton then renders type badge, action bar (Favorite/Pin/Copy/Edit/Delete), Description, Content, URL, Tags, Collections, and Details sections
+- Created `src/components/dashboard/item-drawer-provider.tsx` — React context + state (`open`, `itemId`); exposes `openDrawer(id)` via `useItemDrawer()` hook; mounts `ItemDrawer` once so pages remain server components
+- Updated `src/components/dashboard/item-card.tsx` — added `id` prop, calls `openDrawer(id)` on click via `useItemDrawer()`
+- Updated `src/app/dashboard/page.tsx` and `src/app/items/[type]/page.tsx` — wrapped with `ItemDrawerProvider`; passed `id` prop to all `ItemCard` usages
+- Added `tests/lib/items.test.ts` — 5 unit tests for `getItemById` (happy path, not found, cross-user isolation, tag flattening, empty arrays)
