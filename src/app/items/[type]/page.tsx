@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { getItemsByType } from '@/lib/db/items'
 import { ItemCard } from '@/components/dashboard/item-card'
+import { ItemDrawerProvider } from '@/components/dashboard/item-drawer-provider'
 import { ICON_MAP } from '@/lib/icon-map'
 import { Code } from 'lucide-react'
 
@@ -17,6 +18,7 @@ export default async function ItemsTypePage({ params }: Props) {
   const Icon = ICON_MAP[itemType.icon] ?? Code
 
   return (
+    <ItemDrawerProvider>
     <div className="p-6">
       <div className="mb-6 flex items-center gap-3">
         <div
@@ -43,5 +45,6 @@ export default async function ItemsTypePage({ params }: Props) {
         </div>
       )}
     </div>
+    </ItemDrawerProvider>
   )
 }

@@ -1,7 +1,11 @@
+'use client'
+
 import { Code, Pin, Star } from 'lucide-react'
 import { ICON_MAP } from '@/lib/icon-map'
+import { useItemDrawer } from './item-drawer-provider'
 
 interface ItemCardProps {
+  id: string
   title: string
   description: string | null | undefined
   typeIcon: string
@@ -14,6 +18,7 @@ interface ItemCardProps {
 }
 
 export function ItemCard({
+  id,
   title,
   description,
   typeIcon,
@@ -23,6 +28,7 @@ export function ItemCard({
   isPinned,
   createdAt,
 }: ItemCardProps) {
+  const { openDrawer } = useItemDrawer()
   const Icon = ICON_MAP[typeIcon] ?? Code
   const color = typeColor
 
@@ -35,6 +41,7 @@ export function ItemCard({
     <div
       className="group flex items-start gap-3 rounded-lg border border-border bg-card px-4 py-3 hover:border-border/80 transition-colors cursor-pointer"
       style={{ borderLeftColor: typeColor, borderLeftWidth: '3px' }}
+      onClick={() => openDrawer(id)}
     >
       <div
         className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-md"
