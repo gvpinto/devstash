@@ -213,6 +213,79 @@ export async function getItemById(id: string, userId: string): Promise<ItemDetai
   }
 }
 
+export interface UpdateItemInput {
+  title: string
+  description: string | null
+  content: string | null
+  url: string | null
+  language: string | null
+  tags: string[]
+}
+
+export async function updateItemById(
+  id: string,
+  userId: string,
+  data: UpdateItemInput
+): Promise<ItemDetail | null> {
+  const existing = await prisma.item.findFirst({ where: { id, userId }, select: { id: true } })
+  if (!existing) return null
+
+  const item = await prisma.item.update({
+    where: { id },
+    data: {
+      title: data.title,
+      description: data.description,
+      content: data.content,
+      url: data.url,
+      language: data.language,
+      tags: {
+        deleteMany: {},
+        create: data.tags.map((name) => ({
+          tag: {
+            connectOrCreate: {
+              where: { name },
+              create: { name },
+            },
+          },
+        })),
+      },
+    },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      content: true,
+      url: true,
+      language: true,
+      isFavorite: true,
+      isPinned: true,
+      createdAt: true,
+      updatedAt: true,
+      itemType: { select: { icon: true, color: true, name: true } },
+      tags: { select: { tag: { select: { name: true } } } },
+      collections: { select: { collection: { select: { id: true, name: true } } } },
+    },
+  })
+
+  return {
+    id: item.id,
+    title: item.title,
+    description: item.description,
+    content: item.content,
+    url: item.url,
+    language: item.language,
+    isFavorite: item.isFavorite,
+    isPinned: item.isPinned,
+    createdAt: item.createdAt,
+    updatedAt: item.updatedAt,
+    tags: item.tags.map((t) => t.tag.name),
+    collections: item.collections.map((c) => c.collection),
+    typeIcon: item.itemType.icon,
+    typeColor: item.itemType.color,
+    typeName: item.itemType.name,
+  }
+}
+
 export async function getItemsByType(
   slug: string
 ): Promise<{ itemType: ItemTypeHeader | null; items: ItemSummary[] }> {
