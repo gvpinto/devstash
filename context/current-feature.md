@@ -248,6 +248,19 @@
 - Updated `src/app/(auth)/sign-in/page.tsx` — handles `too_many_attempts` error code with inline "try again in 15 minutes" message
 - Updated `src/app/(auth)/forgot-password/page.tsx` — handles 429 response with inline error from API
 
+### 2026-07-01 — Item Drawer — Edit Mode
+
+- Added inline edit mode to `ItemDrawer` — Edit button toggles edit mode without closing the Sheet
+- Edit mode replaces action bar with Save and Cancel buttons; Cancel discards, Save persists
+- Editable fields: Title (required), Description, Tags (comma-separated) for all types; Content textarea for snippet/prompt/command/note; Language for snippet/command; URL for link
+- Item type, collections, and dates are read-only in edit mode
+- Installed shadcn `Textarea` and `Sonner` components; added `<Toaster>` to root layout
+- Created `updateItem` server action in `src/actions/items.ts` — Zod validation, session auth, ownership check, `{ success, data, error }` return
+- Added `updateItemById` to `src/lib/db/items.ts` — ownership guard, full tag replace via `deleteMany + connectOrCreate`, returns updated `ItemDetail`
+- Toast success on save; Zod/not-found errors surfaced via toast.error; `router.refresh()` updates card list
+- Added `zod` dependency
+- Added 11 unit tests: `tests/actions/items.test.ts` (7 tests for `updateItem`) and `tests/lib/update-item.test.ts` (4 tests for `updateItemById`)
+
 ### 2026-06-30 — Item Drawer
 
 - Installed shadcn `Sheet` component (`src/components/ui/sheet.tsx`)
